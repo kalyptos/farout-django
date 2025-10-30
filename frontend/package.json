@@ -1,0 +1,21 @@
+{
+  "name": "farout-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx nuxi dev --host 0.0.0.0 --port ${NUXT_PORT:-3000}",
+    "build": "npx nuxi build",
+    "start": "node .output/server/index.mjs",
+    "prepare": "npx nuxi prepare"
+  },
+  "dependencies": {
+    "nuxt": "^4.2.0"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

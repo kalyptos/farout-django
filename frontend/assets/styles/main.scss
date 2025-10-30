@@ -1,0 +1,10 @@
+@use 'variables' as *;   // resolves to assets/styles/_variables.scss
+@use 'mixins' as *;
+
+:root { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: $bg;       // from _variables.scss
+  color: $fg;
+}

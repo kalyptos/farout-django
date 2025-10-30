@@ -1,0 +1,56 @@
+services:
+  farout_backend:
+    build:
+      context: ./backend
+    env_file: .env
+    user: "10001:10001"
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS --max-time 2 http://127.0.0.1:8000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      start_period: 10s
+      retries: 10
+
+  farout_frontend:
+    build:
+      context: ./frontend
+    env_file: .env
+    environment:
+      - NUXT_PUBLIC_API_BASE=http://farout_backend:8000
+    user: "10000:10000"
+    ports:
+      - "${NUXT_PORT:-3000}:3000"
+    depends_on:
+      farout_backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS --max-time 2 http://127.0.0.1:3000/ || exit 1"]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 10
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h 127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+volumes:
+  postgres_data:
