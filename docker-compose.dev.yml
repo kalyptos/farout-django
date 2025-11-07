@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  farout_frontend_dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: farout-frontend-dev
+    user: "1000:1000"  # Run as your user
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.nuxt
+      - /app/.output
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - farout_network
+
+networks:
+  farout_network:
+    external: true
+    name: farout_farout_network

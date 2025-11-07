@@ -3,10 +3,14 @@ from sqlalchemy.orm import DeclarativeBase
 import os
 
 DB_USER = os.getenv("DATABASE_USER", "farout")
-DB_PASS = os.getenv("DATABASE_PASSWORD", "TorOve78!")
+DB_PASS = os.getenv("DATABASE_PASSWORD")
 DB_HOST = os.getenv("DATABASE_HOST", "db")
 DB_PORT = os.getenv("DATABASE_PORT", "5432")
 DB_NAME = os.getenv("DATABASE_NAME", "farout")
+
+# Security: Ensure database password is provided
+if not DB_PASS:
+    raise ValueError("DATABASE_PASSWORD environment variable is required for security")
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 

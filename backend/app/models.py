@@ -1,9 +1,9 @@
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
-from .db import Base
+"""
+Legacy models file for backward compatibility.
+All models are now in the models/ package.
+This file re-exports them for any code still using direct imports.
+"""
+# Re-export all models from the models package
+from .models import User, Member, Item, BlogPost  # noqa
 
-class Item(Base):
-    __tablename__ = "items"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(255), nullable=False)
+__all__ = ["User", "Member", "Item", "BlogPost"]

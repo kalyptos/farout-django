@@ -1,0 +1,52 @@
+@use '../variables/colors' as *;
+@use '../variables/typography' as *;
+@use '../variables/breakpoints' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-primary;
+  font-size: $text-base;
+  line-height: $leading-normal;
+  color: $text-primary;
+  background-color: $background-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  font-weight: $font-bold;
+  line-height: $leading-tight;
+  color: $text-primary;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  transition: color $transition-base;
+
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

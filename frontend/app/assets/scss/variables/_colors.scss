@@ -1,0 +1,231 @@
+// ============================================================================
+// COLOR PALETTE - Single Source of Truth
+// ============================================================================
+// This file defines the entire color system for the website.
+// All other SCSS/CSS files should reference these variables.
+// Based on 60-30-10 color rule for balanced design.
+// ============================================================================
+
+@use 'sass:color';
+
+// ============================================================================
+// BASE COLORS
+// ============================================================================
+
+$color-dark: rgba(46, 55, 61, 0);  // #2e373d with 0 opacity           // Background dark
+$color-light: #ffffff;          // Light text
+
+// ============================================================================
+// BRAND COLORS (60-30-10 Rule)
+// ============================================================================
+
+$color-primary: #00BFFF;        // 60% - Main brand color (blue)
+$color-secondary: #0098d5;      // 30% - Secondary brand color (lime green)
+$color-accent: #00B894;         // 10% - Accent/CTA color (red)
+$color-accent-1: #353B48;       // Star Citizen blue (primary accent)
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Backgrounds
+// ============================================================================
+
+$background-primary: $color-dark;
+$background-secondary: color.adjust($color-dark, $lightness: 5%);
+$background-light: color.adjust($color-dark, $lightness: 10%);
+$background-card: color.adjust($color-dark, $lightness: 8%);
+$background-overlay: rgba($color-dark, 0.95);
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Text
+// ============================================================================
+
+$text-primary: $color-light;
+$text-secondary: rgba($color-light, 0.8);
+$text-muted: rgba($color-light, 0.6);
+$text-heading: $color-light;
+$text-on-light: $color-dark;
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Interactive Elements
+// ============================================================================
+
+$link-color: $color-primary;
+$link-hover: color.adjust($color-primary, $lightness: 10%);
+$link-active: color.adjust($color-primary, $lightness: -5%);
+
+$button-primary-bg: $color-primary;
+$button-primary-hover: color.adjust($color-primary, $lightness: -10%);
+$button-primary-text: $color-light;
+
+$button-secondary-bg: $color-secondary;
+$button-secondary-hover: color.adjust($color-secondary, $lightness: -10%);
+$button-secondary-text: $color-dark;
+
+$button-accent-bg: $color-accent;
+$button-accent-hover: color.adjust($color-accent, $lightness: -10%);
+$button-accent-text: $color-light;
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Status Colors
+// ============================================================================
+
+$success: #4CAF50;
+$warning: #FFA726;
+$error: $color-accent;          // Using accent color for errors
+$info: $color-primary;          // Using primary color for info
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Borders & Dividers
+// ============================================================================
+
+$border-color: rgba($color-light, 0.1);
+$border-color-light: rgba($color-light, 0.05);
+$border-color-medium: rgba($color-light, 0.15);
+$border-primary: $color-primary;
+$border-secondary: $color-secondary;
+$border-accent: $color-accent;
+
+$divider-color: rgba($color-light, 0.15);
+
+// ============================================================================
+// SEMANTIC COLOR APPLICATIONS - Effects & Shadows
+// ============================================================================
+
+$accent-glow-primary: rgba($color-primary, 0.5);
+$accent-glow-secondary: rgba($color-secondary, 0.5);
+$accent-glow-accent: rgba($color-accent, 0.5);
+
+$shadow-color: rgba($color-dark, 0.3);
+$shadow-dark: rgba($color-dark, 0.6);
+$shadow-light: rgba($color-dark, 0.1);
+
+// ============================================================================
+// CSS CUSTOM PROPERTIES (for runtime changes and component use)
+// ============================================================================
+
+:root {
+  // Base colors
+  --color-dark: #{$color-dark};
+  --color-light: #{$color-light};
+
+  // Brand colors
+  --color-primary: #{$color-primary};
+  --color-secondary: #{$color-secondary};
+  --color-accent: #{$color-accent};
+  --color-accent-1: #{$color-accent-1};
+
+  // Backgrounds
+  --background-primary: #{$background-primary};
+  --background-secondary: #{$background-secondary};
+  --background-light: #{$background-light};
+  --background-card: #{$background-card};
+  --background-overlay: #{$background-overlay};
+
+  // Text
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-muted: #{$text-muted};
+  --text-heading: #{$text-heading};
+  --text-on-light: #{$text-on-light};
+
+  // Interactive elements
+  --link-color: #{$link-color};
+  --link-hover: #{$link-hover};
+  --link-active: #{$link-active};
+
+  --button-primary-bg: #{$button-primary-bg};
+  --button-primary-hover: #{$button-primary-hover};
+  --button-primary-text: #{$button-primary-text};
+
+  --button-secondary-bg: #{$button-secondary-bg};
+  --button-secondary-hover: #{$button-secondary-hover};
+  --button-secondary-text: #{$button-secondary-text};
+
+  --button-accent-bg: #{$button-accent-bg};
+  --button-accent-hover: #{$button-accent-hover};
+  --button-accent-text: #{$button-accent-text};
+
+  // Status
+  --success: #{$success};
+  --warning: #{$warning};
+  --error: #{$error};
+  --info: #{$info};
+
+  // Borders
+  --border-color: #{$border-color};
+  --border-color-light: #{$border-color-light};
+  --border-color-medium: #{$border-color-medium};
+  --border-primary: #{$border-primary};
+  --border-secondary: #{$border-secondary};
+  --border-accent: #{$border-accent};
+  --divider-color: #{$divider-color};
+
+  // Effects
+  --accent-glow-primary: #{$accent-glow-primary};
+  --accent-glow-secondary: #{$accent-glow-secondary};
+  --accent-glow-accent: #{$accent-glow-accent};
+  --shadow-color: #{$shadow-color};
+  --shadow-dark: #{$shadow-dark};
+  --shadow-light: #{$shadow-light};
+}
+
+// ============================================================================
+// COLOR UTILITY FUNCTION
+// ============================================================================
+
+@function theme-color($key) {
+  $colors: (
+    'dark': $color-dark,
+    'light': $color-light,
+    'primary': $color-primary,
+    'secondary': $color-secondary,
+    'accent': $color-accent,
+    'success': $success,
+    'warning': $warning,
+    'error': $error,
+    'info': $info
+  );
+
+  @if map-has-key($colors, $key) {
+    @return map-get($colors, $key);
+  }
+
+  @warn "Unknown theme color: #{$key}";
+  @return null;
+}
+
+// ============================================================================
+// GRADIENT DEFINITIONS
+// ============================================================================
+
+$gradient-primary: linear-gradient(135deg, $color-primary 0%, color.adjust($color-primary, $lightness: -15%) 100%);
+$gradient-secondary: linear-gradient(135deg, $color-secondary 0%, color.adjust($color-secondary, $lightness: -15%) 100%);
+$gradient-accent: linear-gradient(135deg, $color-accent 0%, color.adjust($color-accent, $lightness: -15%) 100%);
+$gradient-dark: linear-gradient(135deg, $background-secondary 0%, $background-primary 100%);
+$gradient-overlay: linear-gradient(180deg, transparent 0%, rgba($color-dark, 0.8) 100%);
+$gradient-brand: linear-gradient(135deg, $color-primary 0%, $color-secondary 50%, $color-accent 100%);
+
+// ============================================================================
+// USAGE EXAMPLES (commented out - for reference only)
+// ============================================================================
+
+// In SCSS files:
+// .element {
+//   background-color: $background-primary;
+//   color: $text-primary;
+//   border: 1px solid $border-color;
+//
+//   &:hover {
+//     background-color: $button-primary-bg;
+//   }
+// }
+
+// In Vue component <style lang="scss">:
+// .component {
+//   background: var(--background-primary);
+//   color: var(--text-primary);
+// }
+
+// Using the function:
+// .special {
+//   color: theme-color('primary');
+// }

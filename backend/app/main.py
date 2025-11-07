@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from .db import engine, Base
-from .routers import items
+from .routers import items, blog, admin, auth, admin_users, members
 from .schemas import Health
 
 app = FastAPI(title="Farout Backend", version="1.0.0")
@@ -32,4 +32,10 @@ async def startup() -> None:
 async def health():
     return Health(status="ok")
 
+# Include routers
+app.include_router(auth.router, prefix="/api")
+app.include_router(admin_users.router, prefix="/api")
+app.include_router(members.router, prefix="/api")
 app.include_router(items.router)
+app.include_router(blog.router)
+app.include_router(admin.router)

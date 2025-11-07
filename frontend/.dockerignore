@@ -1,6 +1,38 @@
+# Dependencies
 node_modules
 npm-debug.log
-.DS_Store
+yarn-error.log
+pnpm-debug.log
+
+# Build outputs (generated during Docker build, not copied from host)
 .nuxt
 .output
+dist
+.nitro
+
+# Development
+.env
+.env.*
+!.env.example
 .vscode
+.idea
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Version control
+.git
+.gitignore
+
+# Testing
+coverage
+.coverage
+*.test.ts
+*.spec.ts
+__tests__
+
+# Documentation
+*.md
+!README.md

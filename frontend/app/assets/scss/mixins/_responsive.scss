@@ -1,0 +1,55 @@
+@use '../variables/breakpoints' as *;
+
+@mixin sm {
+  @media (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: $breakpoint-xl) {
+    @content;
+  }
+}
+
+@mixin container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-md;
+  padding-right: $spacing-md;
+
+  @include sm {
+    max-width: $breakpoint-sm;
+  }
+
+  @include md {
+    max-width: $breakpoint-md;
+  }
+
+  @include lg {
+    max-width: $breakpoint-lg;
+  }
+
+  @include xl {
+    max-width: $breakpoint-xl;
+  }
+}
+
+@mixin glow($color: $color-accent-1) {
+  box-shadow: 0 0 10px rgba($color, 0.3),
+              0 0 20px rgba($color, 0.2),
+              0 0 30px rgba($color, 0.1);
+}

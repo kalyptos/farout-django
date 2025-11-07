@@ -1,0 +1,30 @@
+# Environment files
+.env
+*.env.local
+
+# Node modules
+node_modules/
+.nuxt/
+.output/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Database
+*.db
+postgres_data/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
