@@ -31,6 +31,29 @@ export default defineNuxtConfig({
     '@nuxt/image'
   ],
 
+  // IMAGE OPTIMIZATION CONFIG
+  image: {
+    quality: 80,
+    format: ['webp', 'jpeg'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    presets: {
+      background: {
+        modifiers: {
+          format: 'webp',
+          quality: 70,
+          width: 1920,
+        }
+      }
+    }
+  },
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -60,6 +83,8 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/assets/img/favicon.svg' },
+        // PRELOAD BACKGROUND IMAGE for faster initial render
+        { rel: 'preload', as: 'image', href: '/assets/space-background.jpg', type: 'image/jpeg' },
         // Library CSS files (for better caching - not bundled)
         { rel: 'stylesheet', href: '/assets/css/bootstrap.min.css' },
         { rel: 'stylesheet', href: '/assets/css/all.min.css' },

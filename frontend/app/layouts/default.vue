@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 interface Props {
   footerVariant?: 'default' | 'style-2'
@@ -40,13 +40,20 @@ const searchRef = ref<InstanceType<typeof SearchModal> | null>(null)
 const openSearchModal = () => {
   searchRef.value?.openSearch()
 }
+
+// Preload background image on mount for better performance
+onMounted(() => {
+  const img = new Image()
+  img.src = '/assets/space-background.jpg'
+})
 </script>
 
 <style scoped>
 .body-bg {
   position: relative;
   min-height: 100vh;
-  background-image: url('~/assets/space-background.jpg');
+  background-color: #141414; /* Fallback color while loading */
+  background-image: url('/assets/space-background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
