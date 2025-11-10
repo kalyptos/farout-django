@@ -6,22 +6,28 @@ FROM node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /app
 
+# Install build dependencies for native modules (node-gyp, etc.)
+RUN apk add --no-cache python3 make g++
+
 # Copy package files
 COPY package*.json ./
 
-# Install ALL dependencies (including devDependencies needed for build)
-# Use npm ci for reproducible builds, fallback to npm install if no lockfile
-RUN if [ -f package-lock.json ]; then \
-      npm ci; \
-    else \
-      npm install; \
-    fi
+# Install ALL dependencies with verbose output
+RUN echo "Installing dependencies..." && \
+    npm install --verbose 2>&1 | tee npm-install.log || \
+    (echo "❌ NPM INSTALL FAILED" && cat npm-install.log && exit 1)
 
 # Copy source code
 COPY . .
 
-# Run Nuxt prepare and build
-RUN npm run prepare && npm run build
+# Run Nuxt prepare and build with verbose output
+RUN echo "Running Nuxt prepare..." && \
+    npm run prepare --verbose 2>&1 | tee npm-prepare.log || \
+    (echo "❌ PREPARE FAILED" && cat npm-prepare.log && exit 1)
+
+RUN echo "Running Nuxt build..." && \
+    npm run build --verbose 2>&1 | tee npm-build.log || \
+    (echo "❌ BUILD FAILED" && cat npm-build.log && exit 1)
 
 # Debug: Show what was built
 RUN echo "=== Build output ===" && \
