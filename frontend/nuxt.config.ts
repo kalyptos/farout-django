@@ -7,6 +7,15 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  // SSR configuration (explicit for production builds)
+  ssr: true,
+
+  // Nitro server configuration
+  nitro: {
+    preset: 'node',
+    compressPublicAssets: true,
+  },
+
   // CRITICAL: Explicit source directory for Nuxt 4 app/ structure
   srcDir: 'app/',
 
