@@ -43,8 +43,15 @@ services:
       - FRONTEND_URL=${FRONTEND_URL}
     restart: unless-stopped
     logging: *default-logging
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
+    # Expose port for internal container communication only (no host binding)
+    expose:
+      - 8000
+    labels:
+      # Traefik/Caddy reverse proxy configuration
+      - "traefik.enable=true"
+      - "traefik.http.services.farout-backend.loadbalancer.server.port=8000"
+      - "caddy.enable=true"
+      - "caddy.reverse_proxy={{upstreams 8000}}"
     depends_on:
       db:
         condition: service_healthy
@@ -76,8 +83,15 @@ services:
       # Client API base comes from .env file (NUXT_PUBLIC_API_BASE)
     restart: unless-stopped
     logging: *default-logging
-    ports:
-      - "${NUXT_PORT:-3000}:3000"
+    # Expose port for internal container communication only (no host binding)
+    expose:
+      - 3000
+    labels:
+      # Traefik/Caddy reverse proxy configuration
+      - "traefik.enable=true"
+      - "traefik.http.services.farout-frontend.loadbalancer.server.port=3000"
+      - "caddy.enable=true"
+      - "caddy.reverse_proxy={{upstreams 3000}}"
     volumes:
       # Mount source code for development hot reload
       - ./frontend:/app:cached

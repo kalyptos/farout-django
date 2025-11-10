@@ -15,17 +15,19 @@ Farout is a Star Citizen organization management portal - a full-stack web appli
    - Persistent volume for data
 
 2. **Backend** (`farout_backend`): FastAPI with async SQLAlchemy
-   - Runs on port 8000 (configurable via `BACKEND_PORT`)
+   - Exposes internal port 8000 (no host binding for reverse proxy compatibility)
    - Gunicorn with Uvicorn workers (2 workers)
    - Depends on healthy database
    - Health endpoint: `/health`
    - Non-root user (UID 10001)
+   - Traefik/Caddy labels for automatic routing
 
 3. **Frontend** (`farout_frontend`): Nuxt 4 SSR with Nitro
-   - Runs on port 3000 (configurable via `NUXT_PORT`)
+   - Exposes internal port 3000 (no host binding for reverse proxy compatibility)
    - Depends on healthy backend
    - Non-root user (UID 10000)
    - Multi-stage build (build + runtime)
+   - Traefik/Caddy labels for automatic routing
 
 ### Backend Structure
 
@@ -239,20 +241,23 @@ Environment variables are defined in `.env` (copy from `.env.example`):
 
 ### Database
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` - PostgreSQL credentials
-- `POSTGRES_PORT` - External port mapping (default: 5432)
+- Database is internal only (no external port binding)
 
 ### Backend
-- `BACKEND_HOST`, `BACKEND_PORT` - Server binding (default: 0.0.0.0:8000)
+- `BACKEND_HOST`, `BACKEND_PORT` - Internal server binding (default: 0.0.0.0:8000)
 - `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` - DB connection config (typically references POSTGRES_* vars)
-- `CORS_ALLOWED_ORIGINS` - Comma-separated list of allowed origins (no spaces)
+- `CORS_ALLOWED_ORIGINS` - Comma-separated list of allowed origins (use domains, not IP:port)
+- `JWT_SECRET_KEY` - Secret key for JWT token generation (32+ characters)
+- `DEFAULT_ADMIN_USERNAME`, `DEFAULT_ADMIN_PASSWORD` - Default admin credentials
 
 ### Frontend
-- `NUXT_PORT` - Server port (default: 3000)
-- `NUXT_PUBLIC_API_BASE` - Browser-side API base URL (default: http://localhost:8000)
+- `NUXT_PUBLIC_API_BASE` - Browser-side API base URL (use full domain for production: https://api.yourdomain.com)
+- `NUXT_API_BASE_SERVER` - Internal SSR API base (set in docker-compose.yml: http://farout_backend:8000)
+- `FRONTEND_URL` - Frontend domain for OAuth redirects (https://yourdomain.com)
 
 **Important**: The frontend uses different API base URLs depending on context:
-- **SSR (server-side)**: Hardcoded to `http://farout_backend:8000` in docker-compose.yml for inter-container communication
-- **CSR (browser-side)**: Uses `NUXT_PUBLIC_API_BASE` from runtime config, typically `http://localhost:8000`
+- **SSR (server-side)**: Uses `NUXT_API_BASE_SERVER` (`http://farout_backend:8000`) for fast inter-container communication
+- **CSR (browser-side)**: Uses `NUXT_PUBLIC_API_BASE` domain (routed through reverse proxy with SSL/TLS)
 
 ## Health Checks
 
@@ -263,31 +268,69 @@ All services have health checks configured:
 
 Services start in dependency order with health check gates.
 
-## Production Deployment with Public IP
+## Production Deployment with Reverse Proxy (Coolify/Traefik/Caddy)
 
-When deploying to a server with a public IP address (not localhost), you need to configure the application for external access:
+This application is configured for **reverse proxy deployment** (e.g., Coolify, Traefik, Caddy) where multiple projects can run on the same server without port conflicts.
 
-### 1. Update Environment Variables
+### Key Architecture Changes
 
-Edit `.env` to use your server's public IP or domain:
+**No Port Bindings**: Services use `expose` instead of `ports` in docker-compose.yml
+- ✅ Backend: `expose: 8000` (no host binding)
+- ✅ Frontend: `expose: 3000` (no host binding)
+- ✅ Database: Internal only (no external access)
+
+**Reverse Proxy Routing**: All external access via domain names, not ports
+- Traefik/Caddy automatically routes requests to internal container ports
+- Multiple projects can use the same internal ports (8000, 3000) without conflict
+
+### 1. Coolify Configuration
+
+In Coolify UI, configure each service with domains:
+
+**Backend Service:**
+- Domain: `api.farout.yourdomain.com`
+- Internal Port: `8000`
+- Public Port: Leave blank (handled by reverse proxy)
+
+**Frontend Service:**
+- Domain: `farout.yourdomain.com`
+- Internal Port: `3000`
+- Public Port: Leave blank (handled by reverse proxy)
+
+Coolify will automatically:
+- Generate SSL/TLS certificates (Let's Encrypt)
+- Configure Traefik/Caddy routing
+- Handle all external traffic via domains
+
+### 2. Environment Variables
+
+Update `.env` to use your domain names (not IP:port):
 
 ```bash
-# Backend CORS - Allow requests from your public frontend URL
-CORS_ALLOWED_ORIGINS=http://YOUR_PUBLIC_IP:3000,http://localhost:3000
+# Backend CORS - Allow requests from your frontend domain
+CORS_ALLOWED_ORIGINS=https://farout.yourdomain.com,http://localhost:3000
 
-# Frontend - Browser API calls should use public IP
-NUXT_PUBLIC_API_BASE=http://YOUR_PUBLIC_IP:8000
+# Frontend - Browser API calls use backend domain
+NUXT_PUBLIC_API_BASE=https://api.farout.yourdomain.com
+
+# Discord OAuth redirect (use your frontend domain)
+DISCORD_REDIRECT_URI=https://farout.yourdomain.com/api/auth/discord/callback
+
+# Frontend URL for OAuth redirects
+FRONTEND_URL=https://farout.yourdomain.com
 ```
 
-**Example** (for server at 51.68.46.56):
+**Example** (for production domain):
 ```bash
-CORS_ALLOWED_ORIGINS=http://51.68.46.56:3000,http://localhost:3000
-NUXT_PUBLIC_API_BASE=http://51.68.46.56:8000
+CORS_ALLOWED_ORIGINS=https://farout.example.com
+NUXT_PUBLIC_API_BASE=https://api.farout.example.com
+DISCORD_REDIRECT_URI=https://farout.example.com/api/auth/discord/callback
+FRONTEND_URL=https://farout.example.com
 ```
 
-### 2. How It Works
+### 3. How It Works
 
-The application uses a **dual-network configuration** for optimal performance:
+The application uses a **dual-network configuration** optimized for reverse proxy:
 
 - **Server-Side Rendering (SSR)**:
   - Nuxt server makes API calls during page rendering
@@ -296,38 +339,59 @@ The application uses a **dual-network configuration** for optimal performance:
   - Fast inter-container communication, no external network hops
 
 - **Client-Side (Browser)**:
-  - User's browser makes direct API calls after page load
-  - Uses public IP/domain: Value from `NUXT_PUBLIC_API_BASE` in .env
-  - Accessible from anywhere on the internet
+  - User's browser makes API calls after page load
+  - Uses domain from `NUXT_PUBLIC_API_BASE` (e.g., `https://api.farout.yourdomain.com`)
+  - Routed through reverse proxy (Traefik/Caddy)
+  - SSL/TLS automatically handled by reverse proxy
 
 This is automatically handled by:
 - `frontend/composables/useApi.ts` - Detects SSR vs client and uses appropriate base URL
 - `frontend/app/pages/*.vue` - Uses `import.meta.server` to switch between URLs
 
-### 3. Security Considerations
+### 4. Security Considerations
 
 **IMPORTANT for Production**:
 
-1. **Use HTTPS**: Replace `http://` with `https://` and set up SSL/TLS certificates (e.g., Let's Encrypt)
-2. **Update Passwords**: Change all default passwords in `.env` (especially `POSTGRES_PASSWORD`)
-3. **Firewall Rules**: Only expose ports 3000 (frontend) and 8000 (backend) publicly
-4. **Database Port**: Keep PostgreSQL port 5432 internal (already commented out in docker-compose.yml)
-5. **Environment Files**: Never commit `.env` to version control (use `.env.example` as template)
+1. **HTTPS Automatic**: Reverse proxy handles SSL/TLS certificates (Let's Encrypt)
+2. **Update Passwords**: Change all default passwords in `.env`:
+   - `POSTGRES_PASSWORD`
+   - `JWT_SECRET_KEY` (32+ characters)
+   - `DEFAULT_ADMIN_PASSWORD`
+3. **Domain Configuration**: Use proper domains in CORS and OAuth settings
+4. **Database Security**: PostgreSQL stays internal (no external port exposure)
+5. **Environment Files**: Never commit `.env` to version control
 
-### 4. Testing Connectivity
+### 5. Testing Connectivity
 
-After deploying:
+After deploying via Coolify:
 
 ```bash
-# Test backend health
-curl http://YOUR_PUBLIC_IP:8000/health
+# Test backend health (via domain)
+curl https://api.farout.yourdomain.com/health
 
-# Test frontend
-curl http://YOUR_PUBLIC_IP:3000/
+# Test frontend (via domain)
+curl https://farout.yourdomain.com/
 
-# View logs
-docker-compose logs -f farout_backend
-docker-compose logs -f farout_frontend
+# View logs in Coolify UI or via CLI
+# Logs are available in Coolify dashboard for each service
+```
+
+### 6. Multi-Site Benefits
+
+This configuration allows multiple projects on the same server:
+
+**Before (Port Binding - Conflicts)**:
+```
+Server:8000 → Backend1 ❌ Port conflict!
+Server:8000 → Backend2 ❌ Cannot bind!
+```
+
+**After (Reverse Proxy - No Conflicts)**:
+```
+api.site1.com → Traefik → Backend1 (internal 8000) ✅
+api.site2.com → Traefik → Backend2 (internal 8000) ✅ No conflict!
+site1.com → Traefik → Frontend1 (internal 3000) ✅
+site2.com → Traefik → Frontend2 (internal 3000) ✅ No conflict!
 ```
 
 ## Nuxt 4 Key Features
