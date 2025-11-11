@@ -1,121 +1,267 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}{{ ship.manufacturer.name }} {{ ship.name }} - Farout{% endblock %}
+{% block title %}{{ ship.manufacturer.name }} {{ ship.name }} - Far Out Corporation{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <!-- Back Link -->
-    <a href="{% url 'starships:ship_list' %}" class="text-blue-400 hover:text-blue-300 mb-4 inline-block">
-        ← Back to Ship Catalog
-    </a>
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ ship.name }}</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    <a href="{% url 'starships:ship_list' %}">Ships</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    {{ ship.name }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-    <div class="bg-gray-800 rounded-lg overflow-hidden">
-        <!-- Header -->
-        <div class="p-6 border-b border-gray-700">
-            <h1 class="text-4xl font-bold text-white mb-2">
-                {{ ship.manufacturer.name }} {{ ship.name }}
-            </h1>
-            <div class="flex gap-3 mt-4">
-                {% if ship.is_flight_ready %}
-                <span class="bg-green-600 text-white px-3 py-1 rounded">Flight Ready</span>
-                {% elif ship.is_concept %}
-                <span class="bg-yellow-600 text-white px-3 py-1 rounded">Concept</span>
-                {% endif %}
-                <span class="bg-blue-600 text-white px-3 py-1 rounded">{{ ship.size|title }}</span>
-                <span class="bg-purple-600 text-white px-3 py-1 rounded">{{ ship.type }}</span>
+<!-- Ship Details Section -->
+<section class="project-details-section fix section-padding">
+    <div class="container">
+        <div class="project-details-wrapper">
+            <!-- Ship Header Info -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <div class="project-details-content">
+                        <h2>{{ ship.manufacturer.name }} {{ ship.name }}</h2>
+                        <div class="mt-3">
+                            {% if ship.is_flight_ready %}
+                            <span class="badge bg-success me-2">
+                                <i class="fas fa-check-circle"></i> Flight Ready
+                            </span>
+                            {% elif ship.is_concept %}
+                            <span class="badge bg-warning me-2">
+                                <i class="fas fa-pencil-ruler"></i> Concept
+                            </span>
+                            {% endif %}
+                            <span class="badge bg-primary">{{ ship.size|title }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 ps-lg-5">
+                    <p>
+                        {% if ship.description %}
+                            {{ ship.description|truncatewords:50 }}
+                        {% else %}
+                            A {{ ship.type }} manufactured by {{ ship.manufacturer.name }}, designed for versatility and performance in the Star Citizen universe.
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-lg-4 ps-lg-5">
+                    <div class="project-category-items">
+                        <ul>
+                            <li>
+                                Manufacturer: <span>{{ ship.manufacturer.name }}</span>
+                            </li>
+                            <li>
+                                Type: <span>{{ ship.type }}</span>
+                            </li>
+                            <li>
+                                Role: <span>{{ ship.role|default:"Multi-role" }}</span>
+                            </li>
+                            {% if ship.pledge_price %}
+                            <li>
+                                Pledge Price: <span>${{ ship.pledge_price }}</span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Image -->
-        {% if ship.image_url %}
-        <div class="w-full">
-            <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-full h-96 object-cover">
-        </div>
-        {% endif %}
-
-        <!-- Details -->
-        <div class="p-6">
-            {% if ship.description %}
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-white mb-3">Description</h2>
-                <p class="text-gray-300">{{ ship.description }}</p>
+            <!-- Main Ship Image -->
+            {% if ship.image_url %}
+            <div class="details-image wow fadeInUp" data-wow-delay=".3s">
+                <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-100">
             </div>
             {% endif %}
 
-            <!-- Specifications -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                <div class="bg-gray-700 p-4 rounded">
-                    <h3 class="font-bold text-white mb-2">Dimensions</h3>
-                    {% if ship.length %}<p class="text-gray-300">Length: {{ ship.length }}m</p>{% endif %}
-                    {% if ship.beam %}<p class="text-gray-300">Beam: {{ ship.beam }}m</p>{% endif %}
-                    {% if ship.height %}<p class="text-gray-300">Height: {{ ship.height }}m</p>{% endif %}
-                </div>
+            <!-- Ship Overview -->
+            <div class="project-content-2 wow fadeInUp" data-wow-delay=".4s">
+                <h2 class="mb-3">Ship Overview</h2>
+                {% if ship.description %}
+                <p class="mb-2">
+                    {{ ship.description }}
+                </p>
+                {% else %}
+                <p class="mb-2">
+                    The {{ ship.manufacturer.name }} {{ ship.name }} is a {{ ship.type }} designed to excel in its designated role.
+                    Built with cutting-edge technology and attention to detail, this vessel represents the pinnacle of
+                    {{ ship.manufacturer.name }}'s engineering capabilities.
+                </p>
+                {% endif %}
+                <p>
+                    Whether you're exploring the outer reaches of known space or engaging in tactical operations,
+                    the {{ ship.name }} provides the reliability and performance that pilots demand in the Star Citizen universe.
+                </p>
+            </div>
 
-                <div class="bg-gray-700 p-4 rounded">
-                    <h3 class="font-bold text-white mb-2">Crew</h3>
-                    {% if ship.min_crew %}<p class="text-gray-300">Min Crew: {{ ship.min_crew }}</p>{% endif %}
-                    {% if ship.max_crew %}<p class="text-gray-300">Max Crew: {{ ship.max_crew }}</p>{% endif %}
+            <!-- Specifications Grid -->
+            <div class="row g-4 mt-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="project-details-content-3">
+                        <h2 class="mb-3">Dimensions & Capacity</h2>
+                        <div class="details-list-items">
+                            <ul>
+                                {% if ship.length %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Length: {{ ship.length }}m
+                                </li>
+                                {% endif %}
+                                {% if ship.beam %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Beam: {{ ship.beam }}m
+                                </li>
+                                {% endif %}
+                                {% if ship.height %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Height: {{ ship.height }}m
+                                </li>
+                                {% endif %}
+                                {% if ship.cargo_capacity %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Cargo: {{ ship.cargo_capacity }} SCU
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="bg-gray-700 p-4 rounded">
-                    <h3 class="font-bold text-white mb-2">Cargo</h3>
-                    {% if ship.cargo_capacity %}
-                    <p class="text-gray-300">{{ ship.cargo_capacity }} SCU</p>
-                    {% else %}
-                    <p class="text-gray-400">N/A</p>
-                    {% endif %}
+                <div class="col-lg-6">
+                    <div class="project-details-content-3">
+                        <h2 class="mb-3">Crew & Operations</h2>
+                        <div class="details-list-items">
+                            <ul>
+                                {% if ship.min_crew %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Min Crew: {{ ship.min_crew }}
+                                </li>
+                                {% endif %}
+                                {% if ship.max_crew %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Max Crew: {{ ship.max_crew }}
+                                </li>
+                                {% endif %}
+                                {% if ship.focus %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Focus: {{ ship.focus }}
+                                </li>
+                                {% endif %}
+                                {% if ship.production_status %}
+                                <li>
+                                    <i class="fa-regular fa-plus"></i>
+                                    Status: {{ ship.get_production_status_display }}
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Additional Info -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {% if ship.role %}
-                <div>
-                    <h3 class="font-bold text-white mb-2">Role</h3>
-                    <p class="text-gray-300">{{ ship.role }}</p>
-                </div>
-                {% endif %}
-
-                {% if ship.focus %}
-                <div>
-                    <h3 class="font-bold text-white mb-2">Focus</h3>
-                    <p class="text-gray-300">{{ ship.focus }}</p>
-                </div>
-                {% endif %}
-
-                {% if ship.pledge_price %}
-                <div>
-                    <h3 class="font-bold text-white mb-2">Pledge Price</h3>
-                    <p class="text-gray-300">${{ ship.pledge_price }}</p>
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Components -->
+            <!-- Components Section -->
             {% if ship.components.exists %}
-            <div class="mt-6">
-                <h2 class="text-2xl font-bold text-white mb-3">Components</h2>
-                <div class="bg-gray-700 rounded p-4">
+            <div class="project-details-content-3 mt-5">
+                <h2 class="mb-3">Ship Components</h2>
+                <p class="mb-4">
+                    The {{ ship.name }} comes equipped with the following components to ensure optimal performance:
+                </p>
+                <div class="row g-3">
                     {% for component in ship.components.all %}
-                    <div class="mb-2 pb-2 {% if not forloop.last %}border-b border-gray-600{% endif %}">
-                        <p class="text-white font-semibold">{{ component.name }}</p>
-                        <p class="text-gray-400 text-sm">{{ component.get_component_type_display }} - Size {{ component.size }}</p>
+                    <div class="col-md-6">
+                        <div class="card bg-dark text-white border-secondary">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="fas fa-cog text-primary"></i> {{ component.name }}
+                                </h6>
+                                <p class="card-text mb-0">
+                                    <small>
+                                        {{ component.get_component_type_display }} - Size {{ component.size }}
+                                        {% if component.manufacturer %} | {{ component.manufacturer }}{% endif %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
 
+            <!-- Manufacturer Info -->
+            <div class="project-details-content-3 mt-5">
+                <h2 class="mb-3">About {{ ship.manufacturer.name }}</h2>
+                <p>
+                    {% if ship.manufacturer.description %}
+                        {{ ship.manufacturer.description }}
+                    {% else %}
+                        {{ ship.manufacturer.name }} is a renowned manufacturer in the Star Citizen universe,
+                        known for producing high-quality spacecraft that meet the demanding needs of pilots across the galaxy.
+                    {% endif %}
+                </p>
+            </div>
+
             <!-- Store Link -->
             {% if ship.store_url %}
-            <div class="mt-6">
-                <a href="{{ ship.store_url }}" target="_blank"
-                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition">
-                    View on RSI Store →
+            <div class="text-center mt-5 mb-4">
+                <a href="{{ ship.store_url }}" target="_blank" class="theme-btn">
+                    <i class="fas fa-external-link-alt"></i> View on RSI Store
                 </a>
             </div>
             {% endif %}
+
+            <!-- Navigation -->
+            <div class="preview-area">
+                <div class="preview-item">
+                    <a href="{% url 'starships:ship_list' %}">
+                        <i class="fa-sharp fa-regular fa-arrow-left"></i> Back to Ship Catalog
+                    </a>
+                </div>
+                {% if ship.store_url %}
+                <div class="preview-item style-2">
+                    <a href="{{ ship.store_url }}" target="_blank">
+                        RSI Store <i class="fa-sharp fa-regular fa-arrow-right"></i>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Call to Action -->
+<section class="lets-talk-section section-bg fix section-padding pb-0">
+    <div class="container">
+        <div class="lets-talk-wrapper">
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                Interested in joining our fleet? <br> Let's fly together!
+            </h2>
+            <a href="/contact/" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
+                Join Far Out Corporation
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}
