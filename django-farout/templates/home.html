@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Farout - Home{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Welcome to Farout</h1>
+    <p style="margin-top: 15px; color: #ccc;">
+        Star Citizen Organization Management Portal
+    </p>
+    <p style="margin-top: 15px;">
+        Manage your organization members, track missions, and stay connected with your Star Citizen community.
+    </p>
+    
+    {% if not user.is_authenticated %}
+    <div style="margin-top: 30px;">
+        <a href="/accounts/discord/login/" class="btn btn-primary" style="font-size: 18px;">
+            🎮 Login with Discord
+        </a>
+    </div>
+    {% else %}
+    <div style="margin-top: 30px;">
+        <a href="/dashboard/" class="btn btn-primary" style="font-size: 18px;">
+            Go to Dashboard →
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if recent_posts %}
+<div class="card">
+    <h2>Recent News</h2>
+    <div style="margin-top: 20px;">
+        {% for post in recent_posts %}
+        <div style="padding: 15px 0; border-bottom: 1px solid #333;">
+            <h3 style="color: #C4DB21;">{{ post.heading }}</h3>
+            <p style="color: #999; margin-top: 5px;">{{ post.created_at|date:"F d, Y" }} by {{ post.author.username }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>About Farout</h2>
+    <p style="margin-top: 15px; color: #ccc;">
+        We are a Star Citizen organization focused on exploration, trading, and building a strong community of space enthusiasts.
+    </p>
+</div>
+{% endblock %}
