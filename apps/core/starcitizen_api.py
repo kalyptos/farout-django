@@ -127,29 +127,7 @@ class StarCitizenAPIClient:
             logger.error(f"Error fetching ship {ship_id}: {e}")
             return None
 
-    def get_manufacturers(self) -> List[Dict[str, Any]]:
-        """
-        Fetch all ship manufacturers.
-
-        Returns:
-            List of manufacturer dictionaries
-        """
-        cache_key = 'starcitizen_manufacturers'
-        cached_data = cache.get(cache_key)
-
-        if cached_data:
-            logger.info("Returning cached manufacturers data")
-            return cached_data
-
-        try:
-            data = self._make_request('v1/cache/manufacturers')
-            manufacturers = data.get('data', [])
-            cache.set(cache_key, manufacturers, self.CACHE_TIMEOUT)
-            logger.info(f"Fetched {len(manufacturers)} manufacturers from API")
-            return manufacturers
-        except Exception as e:
-            logger.error(f"Error fetching manufacturers: {e}")
-            raise StarCitizenAPIError(f"Failed to fetch manufacturers: {e}")
+    # NOTE: Manufacturers are embedded in ship data, no separate endpoint exists
 
     def get_organization(self, sid: str) -> Optional[Dict[str, Any]]:
         """
