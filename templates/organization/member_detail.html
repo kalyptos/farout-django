@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ member.display_name }} - Far Out Corporation{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ member.display_name }}</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    <a href="{% url 'organization:member_list' %}">Members</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    {{ member.handle }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Member Profile Section -->
+<section class="project-details-section fix section-padding">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Left Column: Profile Info -->
+            <div class="col-lg-4">
+                <div class="member-profile-card wow fadeInLeft" data-wow-delay=".3s">
+                    <div class="profile-avatar text-center mb-4">
+                        {% if member.avatar_url %}
+                        <img src="{{ member.avatar_url }}" alt="{{ member.display_name }}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #55E6A5;">
+                        {% else %}
+                        <img src="{% static 'img/default-avatar.svg' %}" alt="{{ member.display_name }}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #55E6A5;">
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-info">
+                        <h3 class="text-center mb-3">{{ member.display_name }}</h3>
+                        <p class="text-center text-muted mb-4">@{{ member.handle }}</p>
+
+                        {% if member.rank %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-medal"></i> Rank
+                            </div>
+                            <div class="info-value">
+                                {{ member.rank }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if member.stars > 0 %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-star"></i> Organization Stars
+                            </div>
+                            <div class="info-value">
+                                <span class="badge bg-warning">{{ member.stars }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar"></i> Member Since
+                            </div>
+                            <div class="info-value">
+                                {{ member.created_at|date:"F Y" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Details -->
+            <div class="col-lg-8">
+                <!-- Bio Section -->
+                {% if member.bio %}
+                <div class="details-card wow fadeInRight" data-wow-delay=".3s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-user-circle"></i> Biography
+                    </h3>
+                    <p class="bio-text">{{ member.bio|linebreaks }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Ships Section -->
+                {% if user_ships %}
+                <div class="details-card wow fadeInRight mt-4" data-wow-delay=".5s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-rocket"></i> Fleet Ships ({{ user_ships|length }})
+                    </h3>
+                    <div class="row g-3">
+                        {% for fleet_ship in user_ships %}
+                        <div class="col-md-6">
+                            <div class="ship-item">
+                                <div class="ship-info">
+                                    <h5>
+                                        <a href="{% url 'starships:ship_detail' fleet_ship.ship.pk %}">
+                                            {{ fleet_ship.ship.name }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted mb-1">
+                                        <i class="fas fa-industry"></i> {{ fleet_ship.ship.manufacturer.name }}
+                                    </p>
+                                    {% if fleet_ship.name %}
+                                    <p class="ship-nickname mb-1">
+                                        <i class="fas fa-tag"></i> "{{ fleet_ship.name }}"
+                                    </p>
+                                    {% endif %}
+                                    <span class="badge {% if fleet_ship.status == 'active' %}bg-success{% elif fleet_ship.status == 'maintenance' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                        {{ fleet_ship.get_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="details-card wow fadeInRight mt-4" data-wow-delay=".5s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-rocket"></i> Fleet Ships
+                    </h3>
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-info-circle"></i> No ships registered for this member yet.
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Statistics Section -->
+                <div class="details-card wow fadeInRight mt-4" data-wow-delay=".7s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-chart-line"></i> Statistics
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <div class="stat-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>{{ user_ships|length }}</h4>
+                                    <p>Ships Owned</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <div class="stat-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>0</h4>
+                                    <p>Missions <small class="text-muted">(Coming Soon)</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-box">
+                                <div class="stat-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>0</h4>
+                                    <p>Training <small class="text-muted">(Coming Soon)</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-4 text-center wow fadeInUp" data-wow-delay=".9s">
+                    <a href="{% url 'organization:member_list' %}" class="theme-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Members
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.member-profile-card,
+.details-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #333;
+}
+
+.profile-info .info-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-info .info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #aaa;
+    font-weight: 600;
+}
+
+.info-label i {
+    color: #55E6A5;
+    margin-right: 8px;
+}
+
+.info-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.bio-text {
+    color: #ccc;
+    line-height: 1.8;
+}
+
+.ship-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    transition: all 0.3s;
+}
+
+.ship-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #55E6A5;
+    transform: translateY(-3px);
+}
+
+.ship-item h5 a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.ship-item h5 a:hover {
+    color: #55E6A5;
+}
+
+.ship-nickname {
+    color: #55E6A5;
+    font-style: italic;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.stat-box:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #55E6A5;
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: #55E6A5;
+    margin-bottom: 15px;
+}
+
+.stat-content h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.stat-content p {
+    color: #aaa;
+    margin: 0;
+}
+
+.details-card h3 {
+    color: #fff;
+    border-bottom: 2px solid #55E6A5;
+    padding-bottom: 10px;
+}
+
+.details-card h3 i {
+    color: #55E6A5;
+    margin-right: 10px;
+}
+</style>
+{% endblock %}

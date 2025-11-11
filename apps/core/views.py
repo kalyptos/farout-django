@@ -109,3 +109,41 @@ def dashboard(request):
         'total_org_ships': total_org_ships,
     }
     return render(request, 'dashboard.html', context)
+
+
+def about(request):
+    """About Us page."""
+    from apps.organization.models import Organization, OrganizationMember
+    from apps.starships.models import Ship
+
+    # Get organization stats
+    try:
+        org = Organization.objects.first()
+    except Organization.DoesNotExist:
+        org = None
+
+    total_members = OrganizationMember.objects.count()
+    total_ships = Ship.objects.count()
+
+    context = {
+        'organization': org,
+        'total_members': total_members,
+        'total_ships': total_ships,
+    }
+    return render(request, 'about.html', context)
+
+
+def contact(request):
+    """Contact page."""
+    from apps.organization.models import Organization
+
+    # Get organization info
+    try:
+        org = Organization.objects.first()
+    except Organization.DoesNotExist:
+        org = None
+
+    context = {
+        'organization': org,
+    }
+    return render(request, 'contact.html', context)

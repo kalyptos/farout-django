@@ -88,35 +88,12 @@
                 <div class="portfolio-box-items wow fadeInUp" data-wow-delay=".{{ forloop.counter }}s">
                     <div class="project-wrap">
                         <div class="content">
-                            <span>{{ ship.manufacturer.name }} | {{ ship.type }}</span>
+                            <span>{{ ship.manufacturer.name }}</span>
                             <h3>
                                 <a href="{% url 'starships:ship_detail' ship.pk %}">
                                     {{ ship.name }}
                                 </a>
                             </h3>
-                        </div>
-                        <p>
-                            {% if ship.description %}
-                                {{ ship.description|truncatewords:20 }}
-                            {% else %}
-                                A {{ ship.type }} manufactured by {{ ship.manufacturer.name }}.
-                            {% endif %}
-                        </p>
-                        <div class="ship-specs mt-3">
-                            {% if ship.crew_min and ship.crew_max %}
-                            <span class="badge bg-primary me-2">
-                                <i class="fas fa-users"></i> Crew: {{ ship.crew_min }}-{{ ship.crew_max }}
-                            </span>
-                            {% endif %}
-                            {% if ship.is_flight_ready %}
-                            <span class="badge bg-success">
-                                <i class="fas fa-check-circle"></i> Flight Ready
-                            </span>
-                            {% elif ship.is_concept %}
-                            <span class="badge bg-warning">
-                                <i class="fas fa-pencil-ruler"></i> Concept
-                            </span>
-                            {% endif %}
                         </div>
                     </div>
                     <a href="{% url 'starships:ship_detail' ship.pk %}" class="radius-btn">

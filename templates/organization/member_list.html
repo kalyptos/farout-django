@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Members - Far Out Corporation{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">Organization Members</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    Members
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Members Section -->
+<section class="team-section section-padding fix">
+    <div class="container">
+        <!-- Search & Filters -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <form method="get" class="filter-form">
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-md-6">
+                            <input type="search"
+                                   name="q"
+                                   value="{{ request.GET.q }}"
+                                   placeholder="Search by handle or name..."
+                                   class="form-control">
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <select name="rank" class="form-select">
+                                <option value="">All Ranks</option>
+                                {% for rank in ranks %}
+                                    {% if rank %}
+                                    <option value="{{ rank }}" {% if request.GET.rank == rank %}selected{% endif %}>
+                                        {{ rank }}
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-4 col-md-12">
+                            <button type="submit" class="theme-btn w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h6 class="wow fadeInUp">
+                        Showing {{ members|length }}
+                        {% if members|length == 1 %}member{% else %}members{% endif %}
+                    </h6>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Grid -->
+        <div class="row g-4">
+            {% for member in members %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="team-card-items wow fadeInUp" data-wow-delay=".{{ forloop.counter }}s">
+                    <div class="team-image">
+                        {% if member.avatar_url %}
+                        <img src="{{ member.avatar_url }}" alt="{{ member.display_name }}" style="width: 100%; height: 300px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'img/default-avatar.svg' %}" alt="{{ member.display_name }}" style="width: 100%; height: 300px; object-fit: cover;">
+                        {% endif %}
+                        <div class="social-profile">
+                            <a href="{% url 'organization:member_detail' member.handle %}">
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="team-content text-center">
+                        <h4>
+                            <a href="{% url 'organization:member_detail' member.handle %}">
+                                {{ member.display_name }}
+                            </a>
+                        </h4>
+                        <p class="text-muted mb-2">@{{ member.handle }}</p>
+                        {% if member.rank %}
+                        <p class="member-rank">
+                            <i class="fas fa-star"></i> {{ member.rank }}
+                        </p>
+                        {% endif %}
+                        {% if member.stars > 0 %}
+                        <div class="member-stars mt-2">
+                            <span class="badge bg-warning">
+                                <i class="fas fa-star"></i> {{ member.stars }} Star{{ member.stars|pluralize }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <h3 class="text-muted">No members found matching your criteria.</h3>
+                    <a href="{% url 'organization:member_list' %}" class="theme-btn mt-3">
+                        <i class="fas fa-redo"></i> Reset Filters
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="page-nav-wrap text-center wow fadeInUp pt-60" data-wow-delay=".3s">
+            <ul>
+                {% if page_obj.has_previous %}
+                <li>
+                    <a class="page-numbers icon" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                        <i class="fa-solid fa-arrow-left-long"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li><a class="page-numbers active" href="javascript:void(0)">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li><a class="page-numbers" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li>
+                    <a class="page-numbers icon" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.member-rank {
+    color: #55E6A5;
+    font-weight: 600;
+    margin: 0;
+}
+
+.member-stars {
+    margin-top: 10px;
+}
+
+.team-card-items {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    border: 1px solid #333;
+}
+
+.team-card-items:hover {
+    transform: translateY(-10px);
+    border-color: #55E6A5;
+}
+
+.team-content {
+    padding: 20px;
+}
+
+.team-content h4 a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.team-content h4 a:hover {
+    color: #55E6A5;
+}
+
+.filter-form .form-control,
+.filter-form .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #333;
+    color: #fff;
+    padding: 12px 20px;
+}
+
+.filter-form .form-control:focus,
+.filter-form .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #55E6A5;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(85, 230, 165, 0.25);
+}
+
+.filter-form .form-select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+</style>
+{% endblock %}
