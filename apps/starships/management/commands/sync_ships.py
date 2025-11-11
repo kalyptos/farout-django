@@ -39,6 +39,10 @@ class Command(BaseCommand):
             mfr_updated = 0
 
             for ship_data in ships_data:
+                # Skip null entries
+                if not ship_data:
+                    continue
+
                 mfr_data = ship_data.get('manufacturer', {})
                 code = mfr_data.get('code', '').strip()
 
@@ -70,6 +74,11 @@ class Command(BaseCommand):
 
             for ship_data in ships_data:
                 try:
+                    # Skip null entries
+                    if not ship_data:
+                        skipped_count += 1
+                        continue
+
                     with transaction.atomic():
                         # Get or create manufacturer
                         mfr_code = ship_data.get('manufacturer', {}).get('code', '').strip()
