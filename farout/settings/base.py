@@ -10,7 +10,16 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Security
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-CHANGE-THIS-IN-PRODUCTION')
+# SECRET_KEY is required - no default for security reasons
+# Generate with: python -c "import secrets; print(secrets.token_urlsafe(50))"
+try:
+    SECRET_KEY = config('SECRET_KEY')
+except Exception:
+    raise Exception(
+        "SECRET_KEY environment variable is required. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+    )
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
@@ -134,7 +143,8 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_ON_GET = True
+# SECURITY: Require POST with CSRF token for logout to prevent CSRF attacks
+ACCOUNT_LOGOUT_ON_GET = False
 
 # Discord OAuth settings
 SOCIALACCOUNT_PROVIDERS = {

@@ -15,10 +15,22 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Create default admin user."""
 
-        # Get credentials from environment or use defaults
+        # Get credentials from environment - no defaults for security
         username = config('DEFAULT_ADMIN_USERNAME', default='admin')
-        password = config('DEFAULT_ADMIN_PASSWORD', default='TorOve78!')
         email = config('DEFAULT_ADMIN_EMAIL', default='admin@farout.com')
+
+        # SECURITY: Password MUST be set in environment variable
+        try:
+            password = config('DEFAULT_ADMIN_PASSWORD')
+        except Exception:
+            self.stdout.write(
+                self.style.ERROR(
+                    '❌ ERROR: DEFAULT_ADMIN_PASSWORD environment variable must be set.\n'
+                    '   For security reasons, no default password is provided.\n'
+                    '   Set it in your .env file or environment variables.'
+                )
+            )
+            return
 
         # Check if admin user already exists
         if User.objects.filter(username=username).exists():
@@ -44,9 +56,7 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f'  Username: {username}')
         )
+        # SECURITY: Never log passwords
         self.stdout.write(
-            self.style.SUCCESS(f'  Password: {password}')
-        )
-        self.stdout.write(
-            self.style.WARNING(f'  ⚠ IMPORTANT: Change this password in production!')
+            self.style.WARNING('  ⚠️  SECURITY: Change the default admin password immediately after first login!')
         )

@@ -2,9 +2,11 @@
 Custom User model with Discord OAuth fields.
 Extends AbstractUser to include Discord-specific fields and role management.
 """
+from __future__ import annotations
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from typing import Optional
 
 
 class User(AbstractUser):
@@ -96,22 +98,38 @@ class User(AbstractUser):
             models.Index(fields=['is_active']),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Return string representation of user.
+
+        Returns:
+            str: Username of the user
+        """
         return self.username
 
     @property
-    def is_admin(self):
-        """Check if user has admin role."""
+    def is_admin(self) -> bool:
+        """Check if user has admin role.
+
+        Returns:
+            bool: True if user role is ADMIN, False otherwise
+        """
         return self.role == self.ROLE_ADMIN
 
     @property
-    def discord_avatar_url(self):
-        """Generate full Discord avatar URL."""
+    def discord_avatar_url(self) -> Optional[str]:
+        """Generate full Discord avatar URL from avatar hash.
+
+        Returns:
+            Optional[str]: Full Discord CDN URL if avatar exists, None otherwise
+        """
         if self.discord_id and self.avatar:
             return f"https://cdn.discordapp.com/avatars/{self.discord_id}/{self.avatar}.png"
         return None
 
-    def update_last_login(self):
-        """Update last login timestamp."""
+    def update_last_login(self) -> None:
+        """Update last login timestamp efficiently.
+
+        Only updates the last_login_at field to minimize database writes.
+        """
         self.last_login_at = timezone.now()
         self.save(update_fields=['last_login_at'])

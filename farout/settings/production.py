@@ -26,16 +26,20 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # Content Security Policy (CSP) - 2025 best practices
+# SECURITY: Removed 'unsafe-inline' for better XSS protection
+# TinyMCE may require nonces for inline scripts - configure as needed
 CSP_ENABLED = True
 CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "cdn.tiny.cloud")  # TinyMCE CDN
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "fonts.googleapis.com")
+CSP_SCRIPT_SRC = ("'self'", "cdn.tiny.cloud")  # TinyMCE CDN - removed unsafe-inline
+CSP_STYLE_SRC = ("'self'", "fonts.googleapis.com", "cdn.tiny.cloud")
 CSP_FONT_SRC = ("'self'", "fonts.gstatic.com")
 CSP_IMG_SRC = ("'self'", "data:", "blob:", "https:")
 CSP_CONNECT_SRC = ("'self'",)
 CSP_FRAME_ANCESTORS = ("'none'",)
 CSP_FORM_ACTION = ("'self'",)
 CSP_BASE_URI = ("'self'",)
+# Use nonces for inline scripts/styles if needed
+# CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
 
 # Database connection pooling (production)
 DATABASES['default']['CONN_MAX_AGE'] = 600
