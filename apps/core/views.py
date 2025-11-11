@@ -19,10 +19,23 @@ def health_check(request):
 
 def home(request):
     """Home/landing page."""
+    from apps.starships.models import Ship
+    from apps.organization.models import OrganizationMember
+
     recent_posts = BlogPost.objects.filter(published=True).order_by('-created_at')[:3]
+    featured_ships = Ship.objects.filter(is_flight_ready=True).select_related('manufacturer').order_by('?')[:6]
+
+    # Stats
+    total_ships = Ship.objects.count()
+    total_members = OrganizationMember.objects.count()
+    flight_ready_ships = Ship.objects.filter(is_flight_ready=True).count()
 
     context = {
         'recent_posts': recent_posts,
+        'featured_ships': featured_ships,
+        'total_ships': total_ships,
+        'total_members': total_members,
+        'flight_ready_ships': flight_ready_ships,
     }
     return render(request, 'home.html', context)
 
