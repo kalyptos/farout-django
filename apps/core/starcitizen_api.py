@@ -1,0 +1,187 @@
+"""
+Star Citizen API client for fetching ship and organization data.
+"""
+import requests
+import logging
+from typing import Dict, List, Optional, Any
+from django.conf import settings
+from django.core.cache import cache
+
+logger = logging.getLogger(__name__)
+
+
+class StarCitizenAPIError(Exception):
+    """Exception raised for Star Citizen API errors."""
+    pass
+
+
+class StarCitizenAPIClient:
+    """Client for interacting with Star Citizen API."""
+
+    BASE_URL = "https://api.starcitizen-api.com"
+    CACHE_TIMEOUT = 3600  # 1 hour
+
+    def __init__(self, api_key: Optional[str] = None):
+        """Initialize the API client."""
+        self.api_key = api_key or getattr(settings, 'STARCITIZEN_API_KEY', None)
+        self.session = requests.Session()
+        if self.api_key:
+            self.session.headers.update({'Authorization': f'Bearer {self.api_key}'})
+        self.session.headers.update({
+            'User-Agent': 'Farout-Django/1.0',
+            'Accept': 'application/json'
+        })
+
+    def _make_request(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
+        """Make a request to the Star Citizen API."""
+        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+
+        try:
+            logger.debug(f"Making request to {url} with params {params}")
+            response = self.session.get(url, params=params, timeout=30)
+            response.raise_for_status()
+            data = response.json()
+            logger.debug(f"Response: {data}")
+            return data
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"HTTP error fetching {url}: {e}")
+            raise StarCitizenAPIError(f"HTTP error: {e}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request error fetching {url}: {e}")
+            raise StarCitizenAPIError(f"Request error: {e}")
+        except ValueError as e:
+            logger.error(f"JSON decode error for {url}: {e}")
+            raise StarCitizenAPIError(f"Invalid JSON response: {e}")
+
+    def get_ships(self) -> List[Dict[str, Any]]:
+        """
+        Fetch all ships from the API.
+
+        Returns:
+            List of ship dictionaries
+        """
+        cache_key = 'starcitizen_ships_all'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            logger.info("Returning cached ships data")
+            return cached_data
+
+        try:
+            data = self._make_request('v1/cache/ships')
+            ships = data.get('data', [])
+            cache.set(cache_key, ships, self.CACHE_TIMEOUT)
+            logger.info(f"Fetched {len(ships)} ships from API")
+            return ships
+        except Exception as e:
+            logger.error(f"Error fetching ships: {e}")
+            raise StarCitizenAPIError(f"Failed to fetch ships: {e}")
+
+    def get_ship(self, ship_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Fetch a specific ship by ID.
+
+        Args:
+            ship_id: Ship identifier
+
+        Returns:
+            Ship dictionary or None if not found
+        """
+        cache_key = f'starcitizen_ship_{ship_id}'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            logger.info(f"Returning cached ship data for {ship_id}")
+            return cached_data
+
+        try:
+            data = self._make_request(f'v1/cache/ships/{ship_id}')
+            ship = data.get('data')
+            if ship:
+                cache.set(cache_key, ship, self.CACHE_TIMEOUT)
+            return ship
+        except Exception as e:
+            logger.error(f"Error fetching ship {ship_id}: {e}")
+            return None
+
+    def get_manufacturers(self) -> List[Dict[str, Any]]:
+        """
+        Fetch all ship manufacturers.
+
+        Returns:
+            List of manufacturer dictionaries
+        """
+        cache_key = 'starcitizen_manufacturers'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            logger.info("Returning cached manufacturers data")
+            return cached_data
+
+        try:
+            data = self._make_request('v1/cache/manufacturers')
+            manufacturers = data.get('data', [])
+            cache.set(cache_key, manufacturers, self.CACHE_TIMEOUT)
+            logger.info(f"Fetched {len(manufacturers)} manufacturers from API")
+            return manufacturers
+        except Exception as e:
+            logger.error(f"Error fetching manufacturers: {e}")
+            raise StarCitizenAPIError(f"Failed to fetch manufacturers: {e}")
+
+    def get_organization(self, sid: str) -> Optional[Dict[str, Any]]:
+        """
+        Fetch organization details.
+
+        Args:
+            sid: Organization SID (e.g., 'FAROUT')
+
+        Returns:
+            Organization dictionary or None if not found
+        """
+        cache_key = f'starcitizen_org_{sid}'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            logger.info(f"Returning cached org data for {sid}")
+            return cached_data
+
+        try:
+            data = self._make_request(f'v1/cache/organizations/{sid}')
+            org = data.get('data')
+            if org:
+                cache.set(cache_key, org, self.CACHE_TIMEOUT)
+            return org
+        except Exception as e:
+            logger.error(f"Error fetching organization {sid}: {e}")
+            return None
+
+    def get_organization_members(self, sid: str) -> List[Dict[str, Any]]:
+        """
+        Fetch organization members.
+
+        Args:
+            sid: Organization SID (e.g., 'FAROUT')
+
+        Returns:
+            List of member dictionaries
+        """
+        cache_key = f'starcitizen_org_members_{sid}'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            logger.info(f"Returning cached members data for {sid}")
+            return cached_data
+
+        try:
+            data = self._make_request(f'v1/cache/organizations/{sid}/members')
+            members = data.get('data', [])
+            cache.set(cache_key, members, self.CACHE_TIMEOUT)
+            logger.info(f"Fetched {len(members)} members from API for {sid}")
+            return members
+        except Exception as e:
+            logger.error(f"Error fetching members for {sid}: {e}")
+            raise StarCitizenAPIError(f"Failed to fetch organization members: {e}")
+
+
+# Global API client instance
+api_client = StarCitizenAPIClient()

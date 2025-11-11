@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'apps.members',
     'apps.blog',
     'apps.items',
+    'apps.starships',
+    'apps.organization',
+    'apps.fleet',
 ]
 
 MIDDLEWARE = [

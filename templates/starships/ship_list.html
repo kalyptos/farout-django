@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Ship Catalog - Farout{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-white">Ship Catalog</h1>
+
+    <!-- Search & Filters -->
+    <form method="get" class="mb-8 bg-gray-800 p-4 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <input type="search" name="q" value="{{ request.GET.q }}"
+                   placeholder="Search ships..."
+                   class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+
+            <select name="manufacturer" class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+                <option value="">All Manufacturers</option>
+                {% for mfr in manufacturers %}
+                <option value="{{ mfr.code }}" {% if request.GET.manufacturer == mfr.code %}selected{% endif %}>
+                    {{ mfr.name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select name="type" class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+                <option value="">All Types</option>
+                {% for type in ship_types %}
+                <option value="{{ type }}" {% if request.GET.type == type %}selected{% endif %}>
+                    {{ type }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <!-- Ship Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for ship in ships %}
+        <div class="bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl transition border border-gray-700">
+            {% if ship.image_url %}
+            <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-full h-48 object-cover">
+            {% else %}
+            <div class="w-full h-48 bg-gray-700 flex items-center justify-center">
+                <span class="text-gray-500">No Image</span>
+            </div>
+            {% endif %}
+            <div class="p-4">
+                <h3 class="font-bold text-lg mb-2 text-white">{{ ship.name }}</h3>
+                <p class="text-sm text-gray-400 mb-1">{{ ship.manufacturer.name }}</p>
+                <p class="text-sm text-gray-400 mb-3">{{ ship.type }}</p>
+                <div class="flex gap-2 mb-3">
+                    {% if ship.is_flight_ready %}
+                    <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">Flight Ready</span>
+                    {% elif ship.is_concept %}
+                    <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Concept</span>
+                    {% endif %}
+                </div>
+                <a href="{% url 'starships:ship_detail' ship.pk %}"
+                   class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition">
+                    View Details
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-12 text-gray-400">
+            <p>No ships found matching your criteria.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="mt-8 flex justify-center items-center gap-4">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">Previous</a>
+        {% endif %}
+        <span class="px-4 py-2 text-white">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

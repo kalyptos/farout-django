@@ -21,6 +21,9 @@ urlpatterns = [
     path('', core_views.home, name='home'),
     path('dashboard/', core_views.dashboard, name='dashboard'),
 
+    # Apps
+    path('ships/', include('apps.starships.urls')),
+
     # TinyMCE
     path('tinymce/', include('tinymce.urls')),
 ]

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ ship.manufacturer.name }} {{ ship.name }} - Farout{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Back Link -->
+    <a href="{% url 'starships:ship_list' %}" class="text-blue-400 hover:text-blue-300 mb-4 inline-block">
+        ← Back to Ship Catalog
+    </a>
+
+    <div class="bg-gray-800 rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-700">
+            <h1 class="text-4xl font-bold text-white mb-2">
+                {{ ship.manufacturer.name }} {{ ship.name }}
+            </h1>
+            <div class="flex gap-3 mt-4">
+                {% if ship.is_flight_ready %}
+                <span class="bg-green-600 text-white px-3 py-1 rounded">Flight Ready</span>
+                {% elif ship.is_concept %}
+                <span class="bg-yellow-600 text-white px-3 py-1 rounded">Concept</span>
+                {% endif %}
+                <span class="bg-blue-600 text-white px-3 py-1 rounded">{{ ship.size|title }}</span>
+                <span class="bg-purple-600 text-white px-3 py-1 rounded">{{ ship.type }}</span>
+            </div>
+        </div>
+
+        <!-- Image -->
+        {% if ship.image_url %}
+        <div class="w-full">
+            <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-full h-96 object-cover">
+        </div>
+        {% endif %}
+
+        <!-- Details -->
+        <div class="p-6">
+            {% if ship.description %}
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-white mb-3">Description</h2>
+                <p class="text-gray-300">{{ ship.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Specifications -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold text-white mb-2">Dimensions</h3>
+                    {% if ship.length %}<p class="text-gray-300">Length: {{ ship.length }}m</p>{% endif %}
+                    {% if ship.beam %}<p class="text-gray-300">Beam: {{ ship.beam }}m</p>{% endif %}
+                    {% if ship.height %}<p class="text-gray-300">Height: {{ ship.height }}m</p>{% endif %}
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold text-white mb-2">Crew</h3>
+                    {% if ship.min_crew %}<p class="text-gray-300">Min Crew: {{ ship.min_crew }}</p>{% endif %}
+                    {% if ship.max_crew %}<p class="text-gray-300">Max Crew: {{ ship.max_crew }}</p>{% endif %}
+                </div>
+
+                <div class="bg-gray-700 p-4 rounded">
+                    <h3 class="font-bold text-white mb-2">Cargo</h3>
+                    {% if ship.cargo_capacity %}
+                    <p class="text-gray-300">{{ ship.cargo_capacity }} SCU</p>
+                    {% else %}
+                    <p class="text-gray-400">N/A</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% if ship.role %}
+                <div>
+                    <h3 class="font-bold text-white mb-2">Role</h3>
+                    <p class="text-gray-300">{{ ship.role }}</p>
+                </div>
+                {% endif %}
+
+                {% if ship.focus %}
+                <div>
+                    <h3 class="font-bold text-white mb-2">Focus</h3>
+                    <p class="text-gray-300">{{ ship.focus }}</p>
+                </div>
+                {% endif %}
+
+                {% if ship.pledge_price %}
+                <div>
+                    <h3 class="font-bold text-white mb-2">Pledge Price</h3>
+                    <p class="text-gray-300">${{ ship.pledge_price }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Components -->
+            {% if ship.components.exists %}
+            <div class="mt-6">
+                <h2 class="text-2xl font-bold text-white mb-3">Components</h2>
+                <div class="bg-gray-700 rounded p-4">
+                    {% for component in ship.components.all %}
+                    <div class="mb-2 pb-2 {% if not forloop.last %}border-b border-gray-600{% endif %}">
+                        <p class="text-white font-semibold">{{ component.name }}</p>
+                        <p class="text-gray-400 text-sm">{{ component.get_component_type_display }} - Size {{ component.size }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Store Link -->
+            {% if ship.store_url %}
+            <div class="mt-6">
+                <a href="{{ ship.store_url }}" target="_blank"
+                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition">
+                    View on RSI Store →
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
