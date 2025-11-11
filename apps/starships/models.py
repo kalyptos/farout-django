@@ -15,7 +15,7 @@ class Manufacturer(models.Model):
         help_text=_('Manufacturer code (e.g., AEGS)')
     )
     name = models.CharField(_('Name'), max_length=100)
-    description = models.TextField(_('Description'), blank=True)
+    description = models.TextField(_('Description'), blank=True, null=True)
     logo_url = models.URLField(_('Logo URL'), blank=True)
 
     # API metadata
