@@ -174,7 +174,7 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            data = self._make_request(f'v1/cache/organization/{sid}/members')
+            data = self._make_request(f'v1/cache/organization_members/{sid}')
             members = data.get('data', [])
             cache.set(cache_key, members, self.CACHE_TIMEOUT)
             logger.info(f"Fetched {len(members)} members from API for {sid}")
