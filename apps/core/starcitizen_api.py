@@ -160,6 +160,9 @@ class StarCitizenAPIClient:
         """
         Fetch organization members.
 
+        Note: This endpoint only supports 'live' mode, not 'cache' mode.
+        Members are fetched directly from RSI website.
+
         Args:
             sid: Organization SID (e.g., 'FAROUT')
 
@@ -174,7 +177,8 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            data = self._make_request(f'v1/cache/organization_members/{sid}')
+            # Organization members only available in 'live' mode
+            data = self._make_request(f'v1/live/organization_members/{sid}')
             members = data.get('data', [])
             cache.set(cache_key, members, self.CACHE_TIMEOUT)
             logger.info(f"Fetched {len(members)} members from API for {sid}")
