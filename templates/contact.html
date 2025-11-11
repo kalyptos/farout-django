@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Farout{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .contact-header {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border: 2px solid #C4DB21;
+        border-radius: 12px;
+        padding: 50px 40px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .contact-header h1 {
+        color: #C4DB21;
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+    .contact-header p {
+        color: #ccc;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+    .contact-form {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 40px;
+    }
+    .form-group {
+        margin-bottom: 25px;
+    }
+    .form-group label {
+        display: block;
+        color: #C4DB21;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        background: #2a2a2a;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 12px 15px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #C4DB21;
+    }
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+    .form-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+    .contact-info {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+    .contact-info h2 {
+        color: #C4DB21;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #333;
+    }
+    .contact-item:last-child {
+        border-bottom: none;
+    }
+    .contact-icon {
+        font-size: 24px;
+        width: 40px;
+        text-align: center;
+    }
+    .contact-details {
+        flex: 1;
+    }
+    .contact-label {
+        color: #999;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    .contact-value {
+        color: #fff;
+        font-size: 16px;
+    }
+    .contact-value a {
+        color: #C4DB21;
+        text-decoration: none;
+    }
+    .contact-value a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <!-- Header -->
+    <div class="contact-header">
+        <h1>Contact Us</h1>
+        <p>
+            Have questions? Want to join our organization? Need support?<br>
+            We're here to help. Reach out to us using the form below.
+        </p>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+        <h2 style="color: #C4DB21; margin-bottom: 25px; text-align: center;">Send us a Message</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-bottom: 20px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'contact' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Your Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                    <option value="">Select a subject</option>
+                    <option value="join">Join Organization</option>
+                    <option value="support">Technical Support</option>
+                    <option value="partnership">Partnership Inquiry</option>
+                    <option value="general">General Question</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" required placeholder="Tell us what's on your mind..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" style="font-size: 18px; padding: 12px 50px;">
+                    Send Message
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-info">
+        <h2>Other Ways to Reach Us</h2>
+
+        <div class="contact-item">
+            <div class="contact-icon">💬</div>
+            <div class="contact-details">
+                <div class="contact-label">Discord Server</div>
+                <div class="contact-value">
+                    <a href="#" target="_blank">Join Our Discord</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-item">
+            <div class="contact-icon">🎮</div>
+            <div class="contact-details">
+                <div class="contact-label">Star Citizen Organization</div>
+                <div class="contact-value">
+                    <a href="https://robertsspaceindustries.com" target="_blank">Visit Our RSI Page</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <div class="contact-details">
+                <div class="contact-label">Website</div>
+                <div class="contact-value">farout.space</div>
+            </div>
+        </div>
+
+        <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div class="contact-details">
+                <div class="contact-label">Response Time</div>
+                <div class="contact-value">We typically respond within 24-48 hours</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note -->
+    <div style="margin-top: 30px; padding: 20px; background: #2a2a2a; border-left: 4px solid #C4DB21; border-radius: 4px;">
+        <p style="color: #ccc; margin: 0; line-height: 1.6;">
+            <strong style="color: #C4DB21;">Note:</strong> This contact form is currently in development.
+            For immediate assistance, please join our Discord server or contact us directly through
+            our Star Citizen organization page.
+        </p>
+    </div>
+</div>
+{% endblock %}

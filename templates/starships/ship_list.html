@@ -40,7 +40,7 @@
     <!-- Ship Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for ship in ships %}
-        <div class="bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl transition border border-gray-700">
+        <a href="{% url 'starships:ship_detail' ship.pk %}" class="bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl transition border border-gray-700 block no-underline">
             {% if ship.image_url %}
             <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-full h-48 object-cover">
             {% else %}
@@ -50,21 +50,9 @@
             {% endif %}
             <div class="p-4">
                 <h3 class="font-bold text-lg mb-2 text-white">{{ ship.name }}</h3>
-                <p class="text-sm text-gray-400 mb-1">{{ ship.manufacturer.name }}</p>
-                <p class="text-sm text-gray-400 mb-3">{{ ship.type }}</p>
-                <div class="flex gap-2 mb-3">
-                    {% if ship.is_flight_ready %}
-                    <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">Flight Ready</span>
-                    {% elif ship.is_concept %}
-                    <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Concept</span>
-                    {% endif %}
-                </div>
-                <a href="{% url 'starships:ship_detail' ship.pk %}"
-                   class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition">
-                    View Details
-                </a>
+                <p class="text-sm text-gray-400">{{ ship.manufacturer.name }}</p>
             </div>
-        </div>
+        </a>
         {% empty %}
         <div class="col-span-full text-center py-12 text-gray-400">
             <p>No ships found matching your criteria.</p>

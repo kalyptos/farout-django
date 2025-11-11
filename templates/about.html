@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Farout{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .about-header {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border: 2px solid #C4DB21;
+        border-radius: 12px;
+        padding: 60px 40px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .about-header h1 {
+        color: #C4DB21;
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+    .about-header p {
+        color: #ccc;
+        font-size: 20px;
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .content-section {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 40px;
+        margin-bottom: 30px;
+    }
+    .content-section h2 {
+        color: #C4DB21;
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+    .content-section p {
+        color: #ccc;
+        font-size: 18px;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin: 40px 0;
+    }
+    .stat-box {
+        background: #2a2a2a;
+        border: 2px solid #C4DB21;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+    }
+    .stat-number {
+        font-size: 64px;
+        font-weight: bold;
+        color: #C4DB21;
+        margin-bottom: 10px;
+    }
+    .stat-label {
+        color: #999;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+    .value-item {
+        background: #2a2a2a;
+        border-left: 4px solid #C4DB21;
+        padding: 25px;
+        border-radius: 4px;
+    }
+    .value-item h3 {
+        color: #C4DB21;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+    .value-item p {
+        color: #ccc;
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+    <!-- Header -->
+    <div class="about-header">
+        <h1>About Farout</h1>
+        <p>
+            A premier Star Citizen organization dedicated to exploration, trade, and security
+            in the vast expanse of space. We are a community of passionate citizens united
+            by our love for adventure and commitment to excellence.
+        </p>
+    </div>
+
+    <!-- Organization Stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-number">{{ total_members }}</div>
+            <div class="stat-label">Active Members</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-number">Est. 2024</div>
+            <div class="stat-label">Founded</div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Possibilities</div>
+        </div>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="content-section">
+        <h2>Our Mission</h2>
+        <p>
+            Farout was established to bring together Star Citizen enthusiasts who share a passion
+            for exploration, commerce, and tactical operations. Our organization operates across
+            multiple sectors, providing opportunities for pilots of all skill levels and interests.
+        </p>
+        <p>
+            Whether you're a seasoned veteran or just starting your journey in the 'verse, Farout
+            offers a welcoming community where you can pursue your goals, improve your skills, and
+            forge lasting friendships.
+        </p>
+    </div>
+
+    <!-- What We Do -->
+    <div class="content-section">
+        <h2>What We Do</h2>
+        <div class="values-grid">
+            <div class="value-item">
+                <h3>🚀 Exploration</h3>
+                <p>
+                    Venture into uncharted territories, discover new systems, and uncover the
+                    mysteries of the universe. Our exploration division charts unknown space
+                    and identifies valuable resources.
+                </p>
+            </div>
+
+            <div class="value-item">
+                <h3>💼 Commerce & Trade</h3>
+                <p>
+                    Build profitable trade routes, manage supply chains, and establish economic
+                    dominance. Our trading fleet ensures goods flow efficiently across the 'verse.
+                </p>
+            </div>
+
+            <div class="value-item">
+                <h3>⚔️ Security Operations</h3>
+                <p>
+                    Protect our assets, escort valuable cargo, and maintain peace in our territories.
+                    Our security forces are trained and ready for any threat.
+                </p>
+            </div>
+
+            <div class="value-item">
+                <h3>🛠️ Industrial Operations</h3>
+                <p>
+                    Mine valuable resources, refine materials, and manufacture components.
+                    Our industrial division powers our economy and keeps our fleet operational.
+                </p>
+            </div>
+
+            <div class="value-item">
+                <h3>🎓 Training & Development</h3>
+                <p>
+                    Comprehensive training programs for new recruits and advanced courses for
+                    veterans. We invest in our members' growth and skill development.
+                </p>
+            </div>
+
+            <div class="value-item">
+                <h3>🤝 Community</h3>
+                <p>
+                    Regular events, collaborative missions, and social gatherings. We're more than
+                    an organization – we're a family of space explorers.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Us -->
+    <div class="content-section">
+        <h2>Join Our Ranks</h2>
+        <p>
+            Farout is always looking for dedicated citizens to join our cause. Whether you're interested
+            in exploration, combat, trade, or industry, there's a place for you in our organization.
+        </p>
+        <p>
+            We provide comprehensive training, top-tier equipment, and a supportive community to help
+            you achieve your goals in the 'verse. Together, we'll reach farout into the stars.
+        </p>
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="{% url 'contact' %}" class="btn btn-primary" style="font-size: 18px; padding: 15px 40px;">
+                Contact Us to Join
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

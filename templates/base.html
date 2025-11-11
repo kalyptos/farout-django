@@ -66,11 +66,19 @@
         <div class="container">
             <h1>🚀 Farout</h1>
             <ul>
-                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="/dashboard/">Dashboard</a></li>
-                    <li><a href="/admin/">Admin</a></li>
-                    <li><a href="/accounts/logout/">Logout ({{ user.username }})</a></li>
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'starships:ship_list' %}">Ships</a></li>
+                    <li><a href="{% url 'members:member_list' %}">Members</a></li>
+                {% endif %}
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li><a href="/admin/">Admin</a></li>
+                    {% endif %}
+                    <li><a href="/accounts/logout/">Logout</a></li>
                 {% else %}
                     <li><a href="/accounts/discord/login/" class="btn btn-primary">Login with Discord</a></li>
                 {% endif %}
