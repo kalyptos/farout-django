@@ -6,6 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from apps.core import views as core_views
+from apps.communications import views as communications_views
 
 urlpatterns = [
     # Admin
@@ -16,17 +17,20 @@ urlpatterns = [
 
     # Authentication (django-allauth)
     path('accounts/', include('allauth.urls')),
+    path('accounts/', include('apps.accounts.urls')),  # Custom account views
 
     # Core views
     path('', core_views.home, name='home'),
     path('dashboard/', core_views.dashboard, name='dashboard'),
     path('about/', core_views.about, name='about'),
-    path('contact/', core_views.contact, name='contact'),
+    path('contact/', communications_views.contact_submit, name='contact'),  # Contact form submission
 
     # Apps
     path('ships/', include('apps.starships.urls')),
     path('organization/', include('apps.organization.urls')),
     path('blog/', include('apps.blog.urls')),
+    path('squadron/', include('apps.squadron.urls')),
+    path('messages/', include('apps.communications.urls')),
 
     # TinyMCE
     path('tinymce/', include('tinymce.urls')),

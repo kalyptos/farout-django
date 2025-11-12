@@ -99,11 +99,13 @@
                     </div>
                     <div class="card-body text-center">
                         <div class="profile-avatar mb-3">
-                            <img src="{% static 'img/default-avatar.svg' %}" alt="{{ user.username }}" class="rounded-circle" style="width: 120px; height: 120px; border: 3px solid #55E6A5;">
+                            <img src="{{ user.get_avatar_url }}" alt="{{ user.username }}" class="rounded-circle" style="width: 120px; height: 120px; border: 3px solid #55E6A5; object-fit: cover;">
                             <div class="mt-2">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i> Profile picture upload coming soon
-                                </small>
+                                <a href="{% url 'accounts:upload_profile_picture' %}" class="text-decoration-none">
+                                    <small class="text-muted">
+                                        <i class="fas fa-camera"></i> {% if user.profile_picture %}Change{% else %}Upload{% endif %} Picture
+                                    </small>
+                                </a>
                             </div>
                         </div>
                         <h5>{{ user.username }}</h5>
@@ -138,7 +140,17 @@
                         <div class="squadron-display mt-3">
                             <h6 class="mb-2">Squadron</h6>
                             <p class="text-muted mb-0">
-                                <i class="fas fa-users me-1"></i> {{ squadron }}
+                                <i class="fas fa-users me-1"></i>
+                                <a href="{% url 'squadron:squadron_detail' squadron.slug %}">{{ squadron.name }}</a>
+                                <span class="badge" style="background-color: {{ squadron.color_code }}20; color: {{ squadron.color_code }};">{{ squadron.callsign }}</span>
+                            </p>
+                        </div>
+                        {% else %}
+                        <div class="squadron-display mt-3">
+                            <h6 class="mb-2">Squadron</h6>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-users me-1"></i> Not assigned
+                                <a href="{% url 'squadron:squadron_list' %}" class="small ms-2">View Squadrons</a>
                             </p>
                         </div>
                         {% endif %}

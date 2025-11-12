@@ -78,13 +78,28 @@ def dashboard(request):
 
     # Count ships by type
     from collections import Counter
-    ship_counts = Counter([fleet_ship.ship.name for fleet_ship.fleet_ship in user_ships])
+    ship_counts = Counter([fleet_ship.ship.name for fleet_ship in user_ships])
+
+    # Get squadron membership
+    from apps.squadron.models import SquadronMember
+    squadron_membership = SquadronMember.objects.filter(
+        user=user,
+        is_active=True
+    ).select_related('squadron').first()
+
+    squadron = squadron_membership.squadron if squadron_membership else None
+
+    # Get unread messages count (from communications DB)
+    from apps.communications.models import InternalMessage
+    unread_messages = InternalMessage.objects.filter(
+        recipient_id=user.id,
+        is_read=False,
+        is_deleted_by_recipient=False
+    ).count()
 
     # Dummy data for features not yet implemented
     missions_completed = 0  # Placeholder
     training_completed = 0  # Placeholder
-    unread_messages = 0  # Placeholder
-    squadron = "Alpha Squadron"  # Placeholder
 
     # Stats for dashboard cards
     total_ships_owned = user_ships.count()
