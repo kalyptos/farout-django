@@ -200,6 +200,9 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
+# Star Citizen API
+STARCITIZEN_API_KEY = 'hv2LmIsGpWc17fYiUD0wByzlXcbcNJFM'
+
 # Logging
 LOGGING = {
     'version': 1,
