@@ -133,6 +133,8 @@ class StarCitizenAPIClient:
         """
         Fetch organization details.
 
+        Note: This endpoint uses 'live' mode to fetch fresh data from RSI.
+
         Args:
             sid: Organization SID (e.g., 'FAROUT')
 
@@ -147,7 +149,8 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            data = self._make_request(f'v1/cache/organization/{sid}')
+            # Organization endpoint uses 'live' mode
+            data = self._make_request(f'v1/live/organization/{sid}')
             org = data.get('data')
             if org:
                 cache.set(cache_key, org, self.CACHE_TIMEOUT)
