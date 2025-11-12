@@ -35,7 +35,17 @@
         <div class="row g-4 mt-4">
             <div class="col-xl-9 wow fadeInUp" data-wow-delay=".3s">
                 <div class="hero-image" style="border-radius: 10px; overflow: hidden;">
-                    <img src="{% static 'img/hero-sc.jpg' %}" alt="Far Out Corporation" style="width: 100%; height: auto;">
+                    <picture>
+                        <source srcset="{% static 'img/hero-sc.avif' %}" type="image/avif">
+                        <source srcset="{% static 'img/hero-sc.webp' %}" type="image/webp">
+                        <img src="{% static 'img/hero-sc.jpg' %}"
+                             alt="Far Out Corporation - Star Citizen organization showcasing our fleet"
+                             width="1920"
+                             height="1080"
+                             fetchpriority="high"
+                             decoding="async"
+                             style="width: 100%; height: auto;">
+                    </picture>
                 </div>
             </div>
             <div class="col-xl-3">

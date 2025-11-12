@@ -67,12 +67,15 @@
                     <div class="team-image">
                         {% if member.avatar_url %}
                         <img src="{{ member.avatar_url }}"
-                             alt="{{ member.display_name }}"
+                             alt="{{ member.display_name }} avatar"
                              loading="lazy"
+                             decoding="async"
                              data-placeholder="{% static 'img/default-avatar.svg' %}">
                         {% else %}
                         <img src="{% static 'img/default-avatar.svg' %}"
-                             alt="{{ member.display_name }}">
+                             alt="{{ member.display_name }} default avatar"
+                             loading="eager"
+                             decoding="sync">
                         {% endif %}
                         <div class="social-profile">
                             <a href="{% url 'organization:member_detail' member.handle %}"

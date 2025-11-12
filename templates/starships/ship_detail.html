@@ -87,7 +87,12 @@
             <!-- Main Ship Image -->
             {% if ship.image_url %}
             <div class="details-image wow fadeInUp" data-wow-delay=".3s">
-                <img src="{{ ship.image_url }}" alt="{{ ship.name }}" class="w-100">
+                <img src="{{ ship.image_url }}"
+                     alt="{{ ship.name }} - {{ ship.manufacturer.name }} starship"
+                     class="w-100"
+                     loading="lazy"
+                     decoding="async"
+                     data-placeholder="{% static 'img/placeholder-ship.jpg' %}">
             </div>
             {% endif %}
 
