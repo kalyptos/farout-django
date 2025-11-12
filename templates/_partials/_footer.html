@@ -1,0 +1,109 @@
+{% load static %}
+
+<!-- Footer Section -->
+<footer class="footer-section section-bg fix">
+    <div class="container">
+        <div class="footer-widgets-wrapper">
+            <div class="row justify-content-between">
+                <!-- Footer About -->
+                <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".3s">
+                    <div class="single-footer-widget">
+                        <div class="widget-head">
+                            <a href="{% url 'home' %}">
+                                <img src="{% static 'img/logo/white-logo.svg' %}" alt="Far Out Corporation" style="height: 40px;">
+                            </a>
+                        </div>
+                        <div class="footer-content">
+                            <p>
+                                Far Out Corporation - A premier Star Citizen organization dedicated to exploration,
+                                trade, and building the future among the stars.
+                            </p>
+                            <div class="social-icon d-flex align-items-center">
+                                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                <a href="#" aria-label="Twitch"><i class="fab fa-twitch"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-xl-2 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".5s">
+                    <div class="single-footer-widget">
+                        <div class="widget-head">
+                            <h4>Quick Links</h4>
+                        </div>
+                        <ul class="list-area">
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'about' %}">About Us</a></li>
+                            <li><a href="{% url 'starships:ship_list' %}">Ships</a></li>
+                            <li><a href="{% url 'organization:member_list' %}">Members</a></li>
+                            <li><a href="{% url 'contact' %}">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Resources -->
+                <div class="col-xl-2 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".7s">
+                    <div class="single-footer-widget">
+                        <div class="widget-head">
+                            <h4>Resources</h4>
+                        </div>
+                        <ul class="list-area">
+                            <li><a href="https://robertsspaceindustries.com" target="_blank" rel="noopener noreferrer">RSI Website</a></li>
+                            <li><a href="https://starcitizen.tools" target="_blank" rel="noopener noreferrer">SC Wiki</a></li>
+                            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                            {% if user.is_authenticated %}
+                                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                            {% else %}
+                                <li><a href="{% url 'account_login' %}">Join Us</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".9s">
+                    <div class="single-footer-widget">
+                        <div class="widget-head">
+                            <h4>Contact Us</h4>
+                        </div>
+                        <div class="footer-content">
+                            <ul class="contact-info">
+                                <li>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Stanton System, ArcCorp
+                                </li>
+                                <li>
+                                    <i class="fab fa-discord"></i>
+                                    <a href="#">Discord Server</a>
+                                </li>
+                                <li>
+                                    <i class="fas fa-globe"></i>
+                                    Organization: FAROUTCORP
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="wow fadeInLeft" data-wow-delay=".3s">
+                        &copy; {% now "Y" %} Far Out Corporation. All Rights Reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="wow fadeInRight" data-wow-delay=".5s">
+                        Powered by Django | Star Citizen&reg; is a registered trademark
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

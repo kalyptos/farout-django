@@ -46,207 +46,21 @@
     </div>
     <!-- Preloader End -->
 
-    <!-- Header Section -->
-    <header id="header-sticky" class="header-1">
-        <div class="container">
-            <div class="mega-menu-wrapper">
-                <div class="header-main">
-                    <!-- Logo -->
-                    <div class="logo">
-                        <a href="{% url 'home' %}" class="header-logo">
-                            <img src="{% static 'img/logo/white-logo.svg' %}" alt="Far Out Corporation" style="height: 50px;">
-                        </a>
-                    </div>
-
-                    <!-- Navigation Menu -->
-                    <div class="mean__menu-wrapper">
-                        <div class="main-menu">
-                            <nav id="mobile-menu">
-                                <ul>
-                                    <li><a href="{% url 'home' %}">Home</a></li>
-
-                                    <li><a href="{% url 'starships:ship_list' %}">Ships</a></li>
-
-                                    <li class="has-dropdown">
-                                        <a href="#">
-                                            Organization
-                                            <i class="fa-solid fa-chevron-down"></i>
-                                        </a>
-                                        <ul class="submenu">
-                                            <li><a href="/about/">About Us</a></li>
-                                            <li><a href="/members/">Members</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><a href="/blog/">News</a></li>
-
-                                    <li><a href="/contact/">Contact</a></li>
-
-                                    {% if user.is_authenticated %}
-                                        <li class="has-dropdown">
-                                            <a href="#">
-                                                {{ user.username }}
-                                                <i class="fa-solid fa-chevron-down"></i>
-                                            </a>
-                                            <ul class="submenu">
-                                                <li><a href="/dashboard/">Dashboard</a></li>
-                                                {% if user.is_staff %}
-                                                    <li><a href="/admin/">Admin</a></li>
-                                                {% endif %}
-                                                <li><a href="/accounts/logout/">Logout</a></li>
-                                            </ul>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <!-- Header Right Actions -->
-                    <div class="header-right d-flex justify-content-end align-items-center">
-                        {% if not user.is_authenticated %}
-                            <a href="/accounts/discord/login/" class="theme-btn">
-                                <i class="fab fa-discord"></i> Login with Discord
-                            </a>
-                        {% endif %}
-
-                        <div class="header__hamburger d-xl-none my-auto">
-                            <div class="sidebar__toggle">
-                                <i class="fas fa-bars"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    <!-- Header Navigation -->
+    {% include '_partials/_nav.html' %}
 
     <!-- Django Messages -->
-    {% if messages %}
-        <div class="container mt-4">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+    {% include '_partials/_messages.html' %}
 
     <!-- Main Content -->
     {% block content %}{% endblock %}
 
-    <!-- Footer Section -->
-    <footer class="footer-section section-bg fix">
-        <div class="container">
-            <div class="footer-widgets-wrapper">
-                <div class="row justify-content-between">
-                    <!-- Footer About -->
-                    <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".3s">
-                        <div class="single-footer-widget">
-                            <div class="widget-head">
-                                <a href="{% url 'home' %}">
-                                    <img src="{% static 'img/logo/white-logo.svg' %}" alt="Far Out Corporation" style="height: 40px;">
-                                </a>
-                            </div>
-                            <div class="footer-content">
-                                <p>
-                                    Far Out Corporation - A premier Star Citizen organization dedicated to exploration,
-                                    trade, and building the future among the stars.
-                                </p>
-                                <div class="social-icon d-flex align-items-center">
-                                    <a href="#"><i class="fab fa-discord"></i></a>
-                                    <a href="#"><i class="fab fa-twitter"></i></a>
-                                    <a href="#"><i class="fab fa-youtube"></i></a>
-                                    <a href="#"><i class="fab fa-twitch"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div class="col-xl-2 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".5s">
-                        <div class="single-footer-widget">
-                            <div class="widget-head">
-                                <h4>Quick Links</h4>
-                            </div>
-                            <ul class="list-area">
-                                <li><a href="{% url 'home' %}">Home</a></li>
-                                <li><a href="/about/">About Us</a></li>
-                                <li><a href="{% url 'starships:ship_list' %}">Ships</a></li>
-                                <li><a href="/members/">Members</a></li>
-                                <li><a href="/blog/">News</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Resources -->
-                    <div class="col-xl-2 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".7s">
-                        <div class="single-footer-widget">
-                            <div class="widget-head">
-                                <h4>Resources</h4>
-                            </div>
-                            <ul class="list-area">
-                                <li><a href="https://robertsspaceindustries.com" target="_blank">RSI Website</a></li>
-                                <li><a href="https://starcitizen.tools" target="_blank">SC Wiki</a></li>
-                                <li><a href="/contact/">Contact Us</a></li>
-                                {% if user.is_authenticated %}
-                                    <li><a href="/dashboard/">Dashboard</a></li>
-                                {% else %}
-                                    <li><a href="/accounts/discord/login/">Join Us</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Contact Info -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".9s">
-                        <div class="single-footer-widget">
-                            <div class="widget-head">
-                                <h4>Contact Us</h4>
-                            </div>
-                            <div class="footer-content">
-                                <ul class="contact-info">
-                                    <li>
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        Stanton System, ArcCorp
-                                    </li>
-                                    <li>
-                                        <i class="fab fa-discord"></i>
-                                        <a href="#">Discord Server</a>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-globe"></i>
-                                        Organization: FAROUTCORP
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer Bottom -->
-            <div class="footer-bottom">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <p class="wow fadeInLeft" data-wow-delay=".3s">
-                            &copy; {% now "Y" %} Far Out Corporation. All Rights Reserved.
-                        </p>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="wow fadeInRight" data-wow-delay=".5s">
-                            Powered by Django | Star Citizen&reg; is a registered trademark
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- Footer -->
+    {% include '_partials/_footer.html' %}
 
     <!-- Scroll To Top -->
-    <div class="scroll-up">
-        <svg class="scroll-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+    <div class="scroll-up" role="button" aria-label="Scroll to top" tabindex="0">
+        <svg class="scroll-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102" aria-hidden="true">
             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
         </svg>
     </div>
