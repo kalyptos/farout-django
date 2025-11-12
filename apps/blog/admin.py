@@ -2,22 +2,44 @@
 Admin configuration for BlogPost model.
 """
 from django.contrib import admin
-from .models import BlogPost
+from .models import BlogPost, Category, Tag
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    """Admin interface for categories."""
+
+    list_display = ('name', 'slug')
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    """Admin interface for tags."""
+
+    list_display = ('name', 'slug')
+    search_fields = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     """Admin interface for blog posts."""
 
-    list_display = ('heading', 'author', 'published', 'created_at', 'updated_at')
-    list_filter = ('published', 'created_at', 'author')
-    search_fields = ('heading', 'content', 'slug')
+    list_display = ('heading', 'category', 'author', 'published', 'created_at', 'updated_at')
+    list_filter = ('published', 'category', 'created_at', 'author')
+    search_fields = ('heading', 'content', 'slug', 'excerpt')
     prepopulated_fields = {'slug': ('heading',)}
     ordering = ('-created_at',)
+    filter_horizontal = ('tags',)
 
     fieldsets = (
         ('Content', {
-            'fields': ('heading', 'slug', 'content', 'feature_image')
+            'fields': ('heading', 'slug', 'excerpt', 'content', 'feature_image')
+        }),
+        ('Classification', {
+            'fields': ('category', 'tags')
         }),
         ('Metadata', {
             'fields': ('author', 'published')

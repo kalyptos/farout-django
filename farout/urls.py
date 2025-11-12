@@ -26,6 +26,7 @@ urlpatterns = [
     # Apps
     path('ships/', include('apps.starships.urls')),
     path('organization/', include('apps.organization.urls')),
+    path('blog/', include('apps.blog.urls')),
 
     # TinyMCE
     path('tinymce/', include('tinymce.urls')),

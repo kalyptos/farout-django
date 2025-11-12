@@ -258,12 +258,12 @@
                             </li>
                         </ul>
                         <h3>
-                            <a href="#">{{ post.heading }}</a>
+                            <a href="{{ post.get_absolute_url }}">{{ post.heading }}</a>
                         </h3>
                         {% if post.content %}
                         <p>{{ post.content|truncatewords:20|striptags }}</p>
                         {% endif %}
-                        <a href="#" class="link-btn">
+                        <a href="{{ post.get_absolute_url }}" class="link-btn">
                             Read More <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -272,7 +272,7 @@
             {% endfor %}
         </div>
         <div class="text-center mt-5">
-            <a href="/blog/" class="theme-btn wow fadeInUp">
+            <a href="{% url 'blog:blog_list' %}" class="theme-btn wow fadeInUp">
                 View All News <i class="fas fa-arrow-right ms-2"></i>
             </a>
         </div>

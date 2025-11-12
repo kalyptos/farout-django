@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.heading }} - Far Out Corporation{% endblock %}
+
+{% block meta_description %}{{ post.excerpt|default:post.content|striptags|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">Blog Details</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    <a href="{% url 'blog:blog_list' %}">Blog</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    {{ post.heading|truncatewords:5 }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Blog Detail Section -->
+<section class="news-details-section section-padding fix">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="blog-details-wrapper">
+                    <!-- Article Header -->
+                    <div class="blog-post-details wow fadeInUp" data-wow-delay=".3s">
+                        <h2 class="mb-3">{{ post.heading }}</h2>
+                        <ul class="post-meta">
+                            <li>
+                                <i class="fa-regular fa-user"></i>
+                                By <span>{{ post.author.username }}</span>
+                            </li>
+                            <li>
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ post.created_at|date:"d M, Y" }}
+                            </li>
+                            {% if post.category %}
+                            <li>
+                                <i class="fa-solid fa-folder"></i>
+                                <a href="{% url 'blog:blog_list' %}?category={{ post.category.slug }}">
+                                    {{ post.category.name }}
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+
+                        <!-- Featured Image -->
+                        {% if post.feature_image %}
+                        <div class="blog-thumb mb-4">
+                            <img src="{{ post.feature_image }}" alt="{{ post.heading }}" loading="lazy" decoding="async"
+                                 style="width: 100%; height: auto; border-radius: 8px;">
+                        </div>
+                        {% endif %}
+
+                        <!-- Article Content -->
+                        <div class="blog-content">
+                            {{ post.content|safe }}
+                        </div>
+
+                        <!-- Tags and Share -->
+                        <div class="tag-share-wrapper mt-5">
+                            <div class="row align-items-center">
+                                <div class="col-lg-8">
+                                    {% if post.tags.all %}
+                                    <div class="tagcloud">
+                                        <span class="me-2"><i class="fa-solid fa-tags"></i> Tags:</span>
+                                        {% for tag in post.tags.all %}
+                                        <a href="{% url 'blog:blog_list' %}?tag={{ tag.slug }}">{{ tag.name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="social-share text-lg-end mt-3 mt-lg-0">
+                                        <span class="me-2">Share:</span>
+                                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ post.heading }}"
+                                           target="_blank" title="Share on Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+                                           target="_blank" title="Share on Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}"
+                                           target="_blank" title="Share on LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                        <a href="https://reddit.com/submit?url={{ request.build_absolute_uri }}&title={{ post.heading }}"
+                                           target="_blank" title="Share on Reddit">
+                                            <i class="fab fa-reddit-alien"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Posts -->
+                    {% if related_posts %}
+                    <div class="related-posts-wrapper mt-5 wow fadeInUp" data-wow-delay=".5s">
+                        <h3 class="mb-4">
+                            <i class="fas fa-newspaper"></i> Related Articles
+                        </h3>
+                        <div class="row g-4">
+                            {% for related in related_posts %}
+                            <div class="col-md-4">
+                                <div class="news-card-items">
+                                    {% if related.feature_image %}
+                                    <div class="news-image">
+                                        <img src="{{ related.feature_image }}" alt="{{ related.heading }}"
+                                             loading="lazy" decoding="async">
+                                    </div>
+                                    {% endif %}
+                                    <div class="news-content">
+                                        <ul class="post-date">
+                                            <li>
+                                                <i class="fa-regular fa-calendar"></i>
+                                                {{ related.created_at|date:"M d, Y" }}
+                                            </li>
+                                        </ul>
+                                        <h6>
+                                            <a href="{{ related.get_absolute_url }}">
+                                                {{ related.heading|truncatewords:10 }}
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="main-sidebar">
+                    <!-- Search Widget -->
+                    <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".3s">
+                        <div class="wid-title">
+                            <h3>Search</h3>
+                        </div>
+                        <div class="search-widget">
+                            <form action="{% url 'blog:blog_list' %}" method="get">
+                                <input type="text" name="q" placeholder="Search articles...">
+                                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Categories Widget -->
+                    {% if categories %}
+                    <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".5s">
+                        <div class="wid-title">
+                            <h3>Top Categories</h3>
+                        </div>
+                        <div class="news-widget-categories">
+                            <ul>
+                                {% for category in categories %}
+                                <li class="{% if post.category == category %}active{% endif %}">
+                                    <a href="{% url 'blog:blog_list' %}?category={{ category.slug }}">
+                                        {{ category.name }} <span>({{ category.post_count }})</span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Recent Posts Widget -->
+                    {% if recent_posts %}
+                    <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".7s">
+                        <div class="wid-title">
+                            <h3>Recent Posts</h3>
+                        </div>
+                        <div class="recent-post-area">
+                            {% for recent in recent_posts %}
+                            <div class="recent-items">
+                                {% if recent.feature_image %}
+                                <div class="recent-thumb">
+                                    <img src="{{ recent.feature_image }}" alt="{{ recent.heading }}"
+                                         loading="lazy" decoding="async">
+                                </div>
+                                {% endif %}
+                                <div class="recent-content">
+                                    <ul>
+                                        <li>
+                                            <i class="fa-regular fa-calendar"></i>
+                                            {{ recent.created_at|date:"M d, Y" }}
+                                        </li>
+                                    </ul>
+                                    <h6>
+                                        <a href="{{ recent.get_absolute_url }}">
+                                            {{ recent.heading|truncatewords:8 }}
+                                        </a>
+                                    </h6>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Popular Tags Widget -->
+                    {% if popular_tags %}
+                    <div class="single-sidebar-widget wow fadeInUp" data-wow-delay=".9s">
+                        <div class="wid-title">
+                            <h3>Popular Tags</h3>
+                        </div>
+                        <div class="news-widget-categories">
+                            <div class="tag-cloud">
+                                {% for tag in popular_tags %}
+                                <a href="{% url 'blog:blog_list' %}?tag={{ tag.slug }}"
+                                   class="{% if tag in post.tags.all %}active{% endif %}">
+                                    {{ tag.name }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
