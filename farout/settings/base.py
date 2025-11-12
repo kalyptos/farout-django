@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'apps.starships',
     'apps.organization',
     'apps.fleet',
+    'apps.squadron',
+    'apps.communications',
 ]
 
 MIDDLEWARE = [
@@ -88,8 +90,16 @@ DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL', default='postgresql://farout:changeme@localhost:5432/farout'),
         conn_max_age=600
+    ),
+    # Separate database for communications (messages, contact forms)
+    'communications': dj_database_url.config(
+        default=config('COMMUNICATIONS_DB_URL', default='postgresql://farout:changeme@localhost:5432/farout_communications'),
+        conn_max_age=600
     )
 }
+
+# Database routers
+DATABASE_ROUTERS = ['farout.db_router.CommunicationsRouter']
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
