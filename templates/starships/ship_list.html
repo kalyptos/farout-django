@@ -5,24 +5,7 @@
 
 {% block content %}
 <!-- Breadcrumb Section -->
-<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
-    <div class="container">
-        <div class="page-heading">
-            <h1 class="wow fadeInUp" data-wow-delay=".3s">Ship Catalog</h1>
-            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
-                <li>
-                    <a href="{% url 'home' %}">Home</a>
-                </li>
-                <li>
-                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
-                </li>
-                <li>
-                    Ships
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+{% include '_partials/_breadcrumbs.html' with title="Ship Catalog" current="Ships" %}
 
 <!-- Ship Catalog Section -->
 <section class="portfolio-section fix section-padding">
@@ -37,10 +20,13 @@
                                    name="q"
                                    value="{{ request.GET.q }}"
                                    placeholder="Search ships..."
-                                   class="form-control">
+                                   class="form-control fo-field"
+                                   aria-label="Search ships">
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <select name="manufacturer" class="form-select">
+                            <select name="manufacturer"
+                                    class="form-select fo-field"
+                                    aria-label="Filter by manufacturer">
                                 <option value="">All Manufacturers</option>
                                 {% for mfr in manufacturers %}
                                 <option value="{{ mfr.code }}" {% if request.GET.manufacturer == mfr.code %}selected{% endif %}>
@@ -50,7 +36,9 @@
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <select name="type" class="form-select">
+                            <select name="type"
+                                    class="form-select fo-field"
+                                    aria-label="Filter by ship type">
                                 <option value="">All Types</option>
                                 {% for type in ship_types %}
                                 <option value="{{ type }}" {% if request.GET.type == type %}selected{% endif %}>
@@ -73,10 +61,10 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="section-title text-center">
-                    <h6 class="wow fadeInUp">
+                    <h2 class="wow fadeInUp">
                         Showing {{ ships|length }}
                         {% if ships|length == 1 %}ship{% else %}ships{% endif %}
-                    </h6>
+                    </h2>
                 </div>
             </div>
         </div>
@@ -96,16 +84,22 @@
                             </h3>
                         </div>
                     </div>
-                    <a href="{% url 'starships:ship_detail' ship.pk %}" class="radius-btn">
+                    <a href="{% url 'starships:ship_detail' ship.pk %}"
+                       class="radius-btn"
+                       aria-label="View details for {{ ship.name }}">
                         <i class="fa-sharp fa-solid fa-arrow-right"></i>
                         View Details
                     </a>
                     {% if ship.image_url %}
                     <div class="project-hover d-none d-md-block bg-cover"
-                         style="background-image: url('{{ ship.image_url }}');"></div>
+                         style="background-image: url('{{ ship.image_url }}');"
+                         role="img"
+                         aria-label="{{ ship.name }} image"></div>
                     {% else %}
                     <div class="project-hover d-none d-md-block bg-cover"
-                         style="background-image: url('{% static 'img/placeholder-ship.jpg' %}');"></div>
+                         style="background-image: url('{% static 'img/placeholder-ship.jpg' %}');"
+                         role="img"
+                         aria-label="Ship placeholder image"></div>
                     {% endif %}
                 </div>
             </div>
@@ -122,35 +116,7 @@
         </div>
 
         <!-- Pagination -->
-        {% if is_paginated %}
-        <div class="page-nav-wrap text-center wow fadeInUp pt-60" data-wow-delay=".3s">
-            <ul>
-                {% if page_obj.has_previous %}
-                <li>
-                    <a class="page-numbers icon" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-                        <i class="fa-solid fa-arrow-left-long"></i>
-                    </a>
-                </li>
-                {% endif %}
-
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                    <li><a class="page-numbers active" href="javascript:void(0)">{{ num }}</a></li>
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                    <li><a class="page-numbers" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
-                    {% endif %}
-                {% endfor %}
-
-                {% if page_obj.has_next %}
-                <li>
-                    <a class="page-numbers icon" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-                        <i class="fa-solid fa-arrow-right-long"></i>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-        {% endif %}
+        {% include '_partials/_pagination.html' %}
     </div>
 </section>
 {% endblock %}

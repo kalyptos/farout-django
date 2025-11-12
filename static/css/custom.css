@@ -333,6 +333,52 @@ button:focus-visible,
     margin: 0;
 }
 
+/* Additional member list styles (from organization templates) */
+.member-rank {
+    color: var(--color-accent);
+    font-weight: 600;
+    margin: 0;
+}
+
+.member-stars {
+    margin-top: 10px;
+}
+
+/* Team card items (Agznko theme override for consistency) */
+.team-card-items {
+    background: var(--bg-card-gradient);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform var(--transition);
+    border: 1px solid var(--border);
+}
+
+.team-card-items:hover {
+    transform: translateY(-10px);
+    border-color: var(--border-accent);
+}
+
+.team-content {
+    padding: var(--space-3);
+}
+
+.team-content h4 a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.team-content h4 a:hover {
+    color: var(--color-accent);
+}
+
+/* Team image sizing for member avatars */
+.team-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
 
 /* ============================================================
    UTILITIES
