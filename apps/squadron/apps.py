@@ -1,0 +1,7 @@
+from django.apps import AppConfig
+
+
+class SquadronConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.squadron'
+    verbose_name = 'Squadron'
