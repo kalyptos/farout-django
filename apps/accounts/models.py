@@ -46,6 +46,14 @@ class User(AbstractUser):
         help_text='Discord avatar hash'
     )
 
+    # Profile picture upload
+    profile_picture = models.ImageField(
+        upload_to='profile_pictures/',
+        null=True,
+        blank=True,
+        help_text='Uploaded profile picture (overrides Discord avatar)'
+    )
+
     # Additional fields
     role = models.CharField(
         max_length=20,
@@ -110,6 +118,20 @@ class User(AbstractUser):
         if self.discord_id and self.avatar:
             return f"https://cdn.discordapp.com/avatars/{self.discord_id}/{self.avatar}.png"
         return None
+
+    def get_avatar_url(self):
+        """Get avatar URL with priority: uploaded > Discord > default."""
+        # Priority 1: Uploaded profile picture
+        if self.profile_picture:
+            return self.profile_picture.url
+
+        # Priority 2: Discord avatar
+        discord_url = self.discord_avatar_url
+        if discord_url:
+            return discord_url
+
+        # Priority 3: Default avatar
+        return '/static/img/default-avatar.svg'
 
     def update_last_login(self):
         """Update last login timestamp."""
