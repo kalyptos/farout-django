@@ -96,12 +96,26 @@
     }
 
     /**
-     * Enhance scroll-to-top button with keyboard accessibility
+     * Enhance scroll-to-top button with keyboard accessibility and show/hide on scroll
      */
     function enhanceScrollToTop() {
         const scrollUpBtn = document.querySelector('.scroll-up');
 
         if (scrollUpBtn) {
+            // Show/hide based on scroll position
+            function toggleScrollButton() {
+                if (window.pageYOffset > 300) {
+                    scrollUpBtn.classList.add('active');
+                } else {
+                    scrollUpBtn.classList.remove('active');
+                }
+            }
+
+            // Check on scroll
+            window.addEventListener('scroll', toggleScrollButton);
+            // Check on load
+            toggleScrollButton();
+
             // Handle keyboard events (Enter or Space)
             scrollUpBtn.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
