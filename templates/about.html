@@ -96,7 +96,7 @@
                         <i class="fas fa-info-circle"></i> About Our Organization
                     </h3>
                     {% if organization and organization.description %}
-                    <p class="content-text">{{ organization.description|linebreaks }}</p>
+                    <div class="content-text">{{ organization.description|safe }}</div>
                     {% else %}
                     <p class="content-text">
                         Far Out Corporation is a dynamic and ambitious Star Citizen organization focused on building a thriving community of pilots, traders, and explorers. We pride ourselves on our diverse membership and commitment to excellence in every endeavor.
@@ -115,7 +115,7 @@
                         <i class="fas fa-history"></i> Our History
                     </h3>
                     {% if organization and organization.history %}
-                    <p class="content-text">{{ organization.history|linebreaks }}</p>
+                    <div class="content-text">{{ organization.history|safe }}</div>
                     {% else %}
                     <p class="content-text">
                         Founded by a group of veteran space pilots, Far Out Corporation began as a small trading company with big dreams. Through dedication, strategic partnerships, and a commitment to our members, we've grown into one of the premier organizations in the 'verse.
@@ -134,7 +134,7 @@
                     <h3 class="mb-4">
                         <i class="fas fa-flag"></i> Our Manifesto
                     </h3>
-                    <p class="content-text">{{ organization.manifesto|linebreaks }}</p>
+                    <div class="content-text">{{ organization.manifesto|safe }}</div>
                 </div>
             </div>
             {% endif %}
@@ -146,7 +146,7 @@
                     <h3 class="mb-4">
                         <i class="fas fa-scroll"></i> Organization Charter
                     </h3>
-                    <p class="content-text">{{ organization.charter|linebreaks }}</p>
+                    <div class="content-text">{{ organization.charter|safe }}</div>
                 </div>
             </div>
             {% endif %}

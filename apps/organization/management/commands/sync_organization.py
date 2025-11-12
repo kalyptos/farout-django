@@ -46,6 +46,12 @@ class Command(BaseCommand):
                 # Check if organization exists
                 org = Organization.objects.filter(sid=sid).first()
 
+                # Helper function to extract HTML from dictionary or return empty string
+                def extract_html(field_data):
+                    if isinstance(field_data, dict):
+                        return field_data.get('html', '')
+                    return field_data or ''
+
                 defaults = {
                     'name': org_data.get('name', sid),
                     'url': org_data.get('url', ''),
@@ -55,10 +61,10 @@ class Command(BaseCommand):
                     'recruiting': org_data.get('recruiting', False),
                     'member_count': org_data.get('member_count', 0),
                     'headline': org_data.get('headline', ''),
-                    'description': org_data.get('description', ''),
-                    'history': org_data.get('history', ''),
-                    'manifesto': org_data.get('manifesto', ''),
-                    'charter': org_data.get('charter', ''),
+                    'description': extract_html(org_data.get('description')),
+                    'history': extract_html(org_data.get('history')),
+                    'manifesto': extract_html(org_data.get('manifesto')),
+                    'charter': extract_html(org_data.get('charter')),
                     'logo_url': org_data.get('logo', ''),
                     'banner_url': org_data.get('banner', ''),
                     'api_data': org_data,
