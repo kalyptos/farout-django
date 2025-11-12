@@ -31,8 +31,7 @@ def blog_list(request):
     if search_query:
         posts = posts.filter(
             Q(heading__icontains=search_query) |
-            Q(content__icontains=search_query) |
-            Q(excerpt__icontains=search_query)
+            Q(content__icontains=search_query)
         )
 
     # Pagination

@@ -29,14 +29,14 @@ class BlogPostAdmin(admin.ModelAdmin):
 
     list_display = ('heading', 'category', 'author', 'published', 'created_at', 'updated_at')
     list_filter = ('published', 'category', 'created_at', 'author')
-    search_fields = ('heading', 'content', 'slug', 'excerpt')
+    search_fields = ('heading', 'content', 'slug')
     prepopulated_fields = {'slug': ('heading',)}
     ordering = ('-created_at',)
     filter_horizontal = ('tags',)
 
     fieldsets = (
         ('Content', {
-            'fields': ('heading', 'slug', 'excerpt', 'content', 'feature_image')
+            'fields': ('heading', 'slug', 'content', 'feature_image')
         }),
         ('Classification', {
             'fields': ('category', 'tags')

@@ -71,12 +71,6 @@ class BlogPost(models.Model):
         help_text='Rich text content (HTML)'
     )
 
-    excerpt = models.TextField(
-        max_length=500,
-        blank=True,
-        help_text='Short excerpt for previews'
-    )
-
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -132,6 +126,14 @@ class BlogPost(models.Model):
     def get_absolute_url(self):
         """Get the URL for this blog post."""
         return reverse('blog:post_detail', kwargs={'slug': self.slug})
+
+    def get_excerpt(self, length=150):
+        """Generate excerpt from content by stripping HTML and truncating."""
+        from django.utils.html import strip_tags
+        text = strip_tags(self.content)
+        if len(text) > length:
+            return text[:length].rsplit(' ', 1)[0] + '...'
+        return text
 
     def save(self, *args, **kwargs):
         """Auto-generate slug from heading if not provided."""

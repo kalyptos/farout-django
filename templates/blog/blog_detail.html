@@ -3,7 +3,7 @@
 
 {% block title %}{{ post.heading }} - Far Out Corporation{% endblock %}
 
-{% block meta_description %}{{ post.excerpt|default:post.content|striptags|truncatewords:30 }}{% endblock %}
+{% block meta_description %}{{ post.get_excerpt }}{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb Section -->

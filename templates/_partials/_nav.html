@@ -28,6 +28,10 @@
                                     <a href="{% url 'starships:ship_list' %}">Ships</a>
                                 </li>
 
+                                <li class="{% active_parent 'blog:blog_list' 'blog:post_detail' %}">
+                                    <a href="{% url 'blog:blog_list' %}">News</a>
+                                </li>
+
                                 <li class="has-dropdown {% active_parent 'about' 'organization:member_list' 'organization:member_detail' %}">
                                     <a href="#">
                                         Organization
