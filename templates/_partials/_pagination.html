@@ -1,7 +1,8 @@
 <!-- Pagination Component -->
 {% if is_paginated %}
-<div class="page-nav-wrap text-center wow fadeInUp pt-60" data-wow-delay=".3s">
-    <ul>
+<nav aria-label="Pagination navigation" role="navigation">
+    <div class="page-nav-wrap text-center wow fadeInUp pt-60" data-wow-delay=".3s">
+        <ul role="list">
         {% if page_obj.has_previous %}
         <li>
             <a class="page-numbers icon"
@@ -38,6 +39,7 @@
             </a>
         </li>
         {% endif %}
-    </ul>
-</div>
+        </ul>
+    </div>
+</nav>
 {% endif %}
