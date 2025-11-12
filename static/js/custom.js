@@ -96,6 +96,64 @@
     }
 
     /**
+     * Enhance scroll-to-top button with keyboard accessibility
+     */
+    function enhanceScrollToTop() {
+        const scrollUpBtn = document.querySelector('.scroll-up');
+
+        if (scrollUpBtn) {
+            // Handle keyboard events (Enter or Space)
+            scrollUpBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            // Also handle click (in case main.js doesn't cover it)
+            scrollUpBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    }
+
+    /**
+     * Skip to main content functionality
+     * Focuses the main content area when skip link is activated
+     */
+    function initSkipLink() {
+        const skipLink = document.querySelector('.skip-link');
+        const mainContent = document.querySelector('main, [role="main"], #content');
+
+        if (skipLink && mainContent) {
+            skipLink.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Make content focusable if not already
+                if (!mainContent.hasAttribute('tabindex')) {
+                    mainContent.setAttribute('tabindex', '-1');
+                }
+
+                // Focus the main content
+                mainContent.focus();
+
+                // Scroll to main content
+                mainContent.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        }
+    }
+
+    /**
      * Initialize all custom functionality
      */
     function init() {
@@ -103,6 +161,8 @@
         enhanceFormValidation();
         addLoadingStates();
         initSmoothScroll();
+        enhanceScrollToTop();
+        initSkipLink();
 
         // Log initialization for debugging
         if (window.console && console.log) {
