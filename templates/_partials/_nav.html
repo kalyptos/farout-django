@@ -16,8 +16,8 @@
                 <!-- Navigation Menu -->
                 <div class="mean__menu-wrapper">
                     <div class="main-menu">
-                        <nav id="mobile-menu">
-                            <ul>
+                        <nav id="mobile-menu" role="navigation" aria-label="Main navigation">
+                            <ul role="menubar">
                                 <li class="{% active 'home' %}">
                                     <a href="{% url 'home' %}">Home</a>
                                 </li>
@@ -80,9 +80,9 @@
                     {% endif %}
 
                     <div class="header__hamburger d-xl-none my-auto">
-                        <div class="sidebar__toggle">
-                            <i class="fas fa-bars"></i>
-                        </div>
+                        <button class="sidebar__toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                            <i class="fas fa-bars" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
             </div>
