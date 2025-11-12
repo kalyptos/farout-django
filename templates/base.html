@@ -1,94 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-placeholder="{% static 'img/placeholder-ship.jpg' %}">
 <head>
+    <!-- Meta Tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Farout - Star Citizen Organization{% endblock %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Far Out Corporation">
+    <meta name="description" content="{% block meta_description %}Far Out Corporation - Star Citizen Organization{% endblock %}">
+
+    <!-- Page Title -->
+    <title>{% block title %}Far Out Corporation - Star Citizen{% endblock %}</title>
+
     {% load static %}
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #141414;
-            color: #ffffff;
-            min-height: 100vh;
-        }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        nav {
-            background: #1a1a1a;
-            border-bottom: 2px solid #C4DB21;
-            padding: 15px 0;
-        }
-        nav .container { display: flex; justify-content: space-between; align-items: center; }
-        nav h1 { color: #C4DB21; font-size: 24px; }
-        nav ul { list-style: none; display: flex; gap: 20px; }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            transition: background 0.3s;
-        }
-        nav a:hover { background: #007bff; }
-        .card {
-            background: #1a1a1a;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #333;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn:hover { background: #0056b3; }
-        .btn-primary { background: #C4DB21; color: #000; }
-        .btn-primary:hover { background: #a8bd1a; }
-        .alert {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-            border-left: 4px solid;
-        }
-        .alert-success { background: #155724; border-color: #C4DB21; }
-        .alert-error { background: #721c24; border-color: #DB2E21; }
-    </style>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}">
+
+    <!-- Preconnect to Google Fonts for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Preload Google Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Teko:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Teko:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Teko:wght@300;400;500;600;700&display=swap"></noscript>
+
+    <!-- CSS Files - Load in order: tokens → vendor → theme → custom -->
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <nav>
-        <div class="container">
-            <h1>🚀 Farout</h1>
-            <ul>
-                <li><a href="/">Home</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="/dashboard/">Dashboard</a></li>
-                    <li><a href="/admin/">Admin</a></li>
-                    <li><a href="/accounts/logout/">Logout ({{ user.username }})</a></li>
-                {% else %}
-                    <li><a href="/accounts/discord/login/" class="btn btn-primary">Login with Discord</a></li>
-                {% endif %}
-            </ul>
+<body class="body-bg">
+
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link visually-hidden-focusable">Skip to main content</a>
+
+    <!-- Preloader Start -->
+    <div id="preloader" class="preloader">
+        <div class="animation-preloader">
+            <div class="spinner"></div>
         </div>
-    </nav>
-
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        {% block content %}{% endblock %}
     </div>
+    <!-- Preloader End -->
+
+    <!-- Header Navigation -->
+    {% include '_partials/_nav.html' %}
+
+    <!-- Django Messages -->
+    {% include '_partials/_messages.html' %}
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include '_partials/_footer.html' %}
+
+    <!-- Scroll To Top -->
+    <div class="scroll-up" role="button" aria-label="Scroll to top" tabindex="0">
+        <svg class="scroll-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102" aria-hidden="true">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+    </div>
+
+    <!-- JavaScript Files - jQuery and Bootstrap must load in order -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}" defer></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="{% static 'js/custom.js' %}" defer></script>
+
+    <!-- Initialize Preloader - inline for immediate execution -->
+    <script>
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 300);
+                }, 500);
+            }
+        });
+    </script>
 
     {% block extra_js %}{% endblock %}
 </body>

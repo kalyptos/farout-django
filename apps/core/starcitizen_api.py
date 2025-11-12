@@ -16,7 +16,15 @@ class StarCitizenAPIError(Exception):
 
 
 class StarCitizenAPIClient:
-    """Client for interacting with Star Citizen API."""
+    """
+    Client for interacting with Star Citizen API.
+
+    API Key Format:
+    The API key is included in the URL path: /{api_key}/v1/{mode}/{endpoint}
+    Example: /0d32404d021613ba948ba0aeef324ef5/v1/cache/ships
+
+    Get your API key at: https://api.starcitizen-api.com or via Discord (/api register)
+    """
 
     BASE_URL = "https://api.starcitizen-api.com"
     CACHE_TIMEOUT = 3600  # 1 hour
@@ -25,23 +33,38 @@ class StarCitizenAPIClient:
         """Initialize the API client."""
         self.api_key = api_key or getattr(settings, 'STARCITIZEN_API_KEY', None)
         self.session = requests.Session()
-        if self.api_key:
-            self.session.headers.update({'Authorization': f'Bearer {self.api_key}'})
         self.session.headers.update({
             'User-Agent': 'Farout-Django/1.0',
             'Accept': 'application/json'
         })
 
     def _make_request(self, endpoint: str, params: Optional[Dict] = None) -> Dict[str, Any]:
-        """Make a request to the Star Citizen API."""
-        url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+        """
+        Make a request to the Star Citizen API.
+
+        The API key is included in the URL path: /{api_key}/v1/{mode}/{endpoint}
+        """
+        # Build URL with API key in path
+        if self.api_key:
+            url = f"{self.BASE_URL}/{self.api_key}/{endpoint.lstrip('/')}"
+        else:
+            # Try without API key (may have rate limits)
+            url = f"{self.BASE_URL}/{endpoint.lstrip('/')}"
+            logger.warning("No API key configured - requests may be rate limited")
 
         try:
             logger.debug(f"Making request to {url} with params {params}")
             response = self.session.get(url, params=params, timeout=30)
             response.raise_for_status()
             data = response.json()
-            logger.debug(f"Response: {data}")
+
+            # Check for API error response
+            if isinstance(data, dict) and not data.get('success', True):
+                error_msg = data.get('message', 'Unknown API error')
+                logger.error(f"API returned error: {error_msg}")
+                raise StarCitizenAPIError(f"API error: {error_msg}")
+
+            logger.debug(f"Response success: {data.get('success', 'N/A')}")
             return data
         except requests.exceptions.HTTPError as e:
             logger.error(f"HTTP error fetching {url}: {e}")
@@ -104,29 +127,7 @@ class StarCitizenAPIClient:
             logger.error(f"Error fetching ship {ship_id}: {e}")
             return None
 
-    def get_manufacturers(self) -> List[Dict[str, Any]]:
-        """
-        Fetch all ship manufacturers.
-
-        Returns:
-            List of manufacturer dictionaries
-        """
-        cache_key = 'starcitizen_manufacturers'
-        cached_data = cache.get(cache_key)
-
-        if cached_data:
-            logger.info("Returning cached manufacturers data")
-            return cached_data
-
-        try:
-            data = self._make_request('v1/cache/manufacturers')
-            manufacturers = data.get('data', [])
-            cache.set(cache_key, manufacturers, self.CACHE_TIMEOUT)
-            logger.info(f"Fetched {len(manufacturers)} manufacturers from API")
-            return manufacturers
-        except Exception as e:
-            logger.error(f"Error fetching manufacturers: {e}")
-            raise StarCitizenAPIError(f"Failed to fetch manufacturers: {e}")
+    # NOTE: Manufacturers are embedded in ship data, no separate endpoint exists
 
     def get_organization(self, sid: str) -> Optional[Dict[str, Any]]:
         """
@@ -146,7 +147,7 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            data = self._make_request(f'v1/cache/organizations/{sid}')
+            data = self._make_request(f'v1/cache/organization/{sid}')
             org = data.get('data')
             if org:
                 cache.set(cache_key, org, self.CACHE_TIMEOUT)
@@ -158,6 +159,9 @@ class StarCitizenAPIClient:
     def get_organization_members(self, sid: str) -> List[Dict[str, Any]]:
         """
         Fetch organization members.
+
+        Note: This endpoint only supports 'live' mode, not 'cache' mode.
+        Members are fetched directly from RSI website.
 
         Args:
             sid: Organization SID (e.g., 'FAROUT')
@@ -173,7 +177,8 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            data = self._make_request(f'v1/cache/organizations/{sid}/members')
+            # Organization members only available in 'live' mode
+            data = self._make_request(f'v1/live/organization_members/{sid}')
             members = data.get('data', [])
             cache.set(cache_key, members, self.CACHE_TIMEOUT)
             logger.info(f"Fetched {len(members)} members from API for {sid}")

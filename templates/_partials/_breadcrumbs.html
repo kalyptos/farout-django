@@ -1,0 +1,30 @@
+{% load static %}
+
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover"
+     style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ title|default:"Page Title" }}</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                {% if parent %}
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    <a href="{{ parent_url }}">{{ parent }}</a>
+                </li>
+                {% endif %}
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    {{ current|default:title }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

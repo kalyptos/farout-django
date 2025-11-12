@@ -1,50 +1,321 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Farout - Home{% endblock %}
+{% block title %}Far Out Corporation - Star Citizen Organization{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Welcome to Farout</h1>
-    <p style="margin-top: 15px; color: #ccc;">
-        Star Citizen Organization Management Portal
-    </p>
-    <p style="margin-top: 15px;">
-        Manage your organization members, track missions, and stay connected with your Star Citizen community.
-    </p>
-    
-    {% if not user.is_authenticated %}
-    <div style="margin-top: 30px;">
-        <a href="/accounts/discord/login/" class="btn btn-primary" style="font-size: 18px;">
-            🎮 Login with Discord
-        </a>
-    </div>
-    {% else %}
-    <div style="margin-top: 30px;">
-        <a href="/dashboard/" class="btn btn-primary" style="font-size: 18px;">
-            Go to Dashboard →
-        </a>
-    </div>
-    {% endif %}
-</div>
-
-{% if recent_posts %}
-<div class="card">
-    <h2>Recent News</h2>
-    <div style="margin-top: 20px;">
-        {% for post in recent_posts %}
-        <div style="padding: 15px 0; border-bottom: 1px solid #333;">
-            <h3 style="color: #C4DB21;">{{ post.heading }}</h3>
-            <p style="color: #999; margin-top: 5px;">{{ post.created_at|date:"F d, Y" }} by {{ post.author.username }}</p>
+<!-- Hero Section -->
+<section class="hero-section hero-2 section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="hero-content">
+                    <h1 class="wow fadeInUp" data-wow-delay=".3s">
+                        Where <span>Exploration</span> <br>
+                        Meets <span>Opportunity</span>
+                    </h1>
+                    <div class="content">
+                        <p class="wow fadeInUp" data-wow-delay=".5s">
+                            Join Far Out Corporation - A premier Star Citizen organization <br>
+                            dedicated to exploration, trade, and building the future among the stars.
+                        </p>
+                        {% if user.is_authenticated %}
+                        <a href="/dashboard/" class="theme-btn wow fadeInUp" data-wow-delay=".7s">
+                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        </a>
+                        {% else %}
+                        <a href="/accounts/discord/login/" class="theme-btn wow fadeInUp" data-wow-delay=".7s">
+                            <i class="fab fa-discord"></i> Join with Discord
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endfor %}
+        <div class="row g-4 mt-4">
+            <div class="col-xl-9 wow fadeInUp" data-wow-delay=".3s">
+                <div class="hero-image" style="border-radius: 10px; overflow: hidden;">
+                    <picture>
+                        <source srcset="{% static 'img/hero-sc.avif' %}" type="image/avif">
+                        <source srcset="{% static 'img/hero-sc.webp' %}" type="image/webp">
+                        <img src="{% static 'img/hero-sc.jpg' %}"
+                             alt="Far Out Corporation - Star Citizen organization showcasing our fleet"
+                             width="1920"
+                             height="1080"
+                             fetchpriority="high"
+                             decoding="async"
+                             style="width: 100%; height: auto;">
+                    </picture>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="hero-counter">
+                    <div class="counter-items wow fadeInUp" data-wow-delay=".3s">
+                        <h2><span class="count">{{ total_ships }}</span></h2>
+                        <p>SHIPS IN DATABASE</p>
+                    </div>
+                    <div class="counter-items active wow fadeInUp" data-wow-delay=".5s">
+                        <h2><span class="count">{{ total_members }}</span></h2>
+                        <p>ORGANIZATION MEMBERS</p>
+                    </div>
+                    <div class="counter-items wow fadeInUp" data-wow-delay=".7s">
+                        <h2><span class="count">{{ flight_ready_ships }}</span></h2>
+                        <p>FLIGHT READY SHIPS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+<!-- What We Do Section -->
+<section class="service-section fix section-padding section-bg">
+    <div class="container">
+        <div class="section-title-area">
+            <div class="section-title">
+                <h6 class="wow fadeInUp">What We Do</h6>
+                <h2 class="wow fadeInUp" data-wow-delay=".3s">Our Areas of <span>Focus</span></h2>
+            </div>
+            <a href="{% url 'starships:ship_list' %}" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
+                View Ship Catalog
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".3s">
+                <div class="service-box-items style-2">
+                    <div class="icon">
+                        <i class="fas fa-rocket fa-3x text-primary"></i>
+                    </div>
+                    <div class="content">
+                        <h3><a href="/about/">Exploration</a></h3>
+                        <p>
+                            We venture into the unknown, charting new systems and discovering opportunities
+                            across the Star Citizen universe.
+                        </p>
+                        <div class="service-btn">
+                            <a href="/about/" class="link-btn">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".5s">
+                <div class="service-box-items style-2">
+                    <div class="icon">
+                        <i class="fas fa-handshake fa-3x text-primary"></i>
+                    </div>
+                    <div class="content">
+                        <h3><a href="/about/">Trading & Commerce</a></h3>
+                        <p>
+                            Establishing profitable trade routes and commercial partnerships throughout
+                            the galaxy to build economic prosperity.
+                        </p>
+                        <div class="service-btn">
+                            <a href="/about/" class="link-btn">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".7s">
+                <div class="service-box-items style-2">
+                    <div class="icon">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <div class="content">
+                        <h3><a href="/members/">Community Building</a></h3>
+                        <p>
+                            Creating a strong, supportive community of pilots who share a passion for
+                            adventure and cooperation in the verse.
+                        </p>
+                        <div class="service-btn">
+                            <a href="/members/" class="link-btn">Meet the Team</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Ships Section -->
+{% if featured_ships %}
+<section class="portfolio-section fix section-padding">
+    <div class="container">
+        <div class="section-title text-center">
+            <h6 class="wow fadeInUp">Our Fleet</h6>
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">Featured <span>Starships</span></h2>
+            <p class="wow fadeInUp" data-wow-delay=".5s">
+                Explore some of the most impressive vessels in the Star Citizen universe
+            </p>
+        </div>
+        <div class="row g-4 mt-4">
+            {% for ship in featured_ships %}
+            <div class="col-xl-4 col-lg-6 col-md-6">
+                <div class="portfolio-box-items wow fadeInUp" data-wow-delay=".{{ forloop.counter }}s">
+                    <div class="project-wrap">
+                        <div class="content">
+                            <span>{{ ship.manufacturer.name }} | {{ ship.type }}</span>
+                            <h3>
+                                <a href="{% url 'starships:ship_detail' ship.pk %}">
+                                    {{ ship.name }}
+                                </a>
+                            </h3>
+                        </div>
+                        <p>
+                            {% if ship.description %}
+                                {{ ship.description|truncatewords:15 }}
+                            {% else %}
+                                A powerful {{ ship.type }} from {{ ship.manufacturer.name }}.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'starships:ship_detail' ship.pk %}" class="radius-btn">
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i>
+                        View Details
+                    </a>
+                    {% if ship.image_url %}
+                    <div class="project-hover d-none d-md-block bg-cover"
+                         style="background-image: url('{{ ship.image_url }}');"></div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'starships:ship_list' %}" class="theme-btn wow fadeInUp">
+                View Full Ship Catalog <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
 {% endif %}
 
-<div class="card">
-    <h2>About Farout</h2>
-    <p style="margin-top: 15px; color: #ccc;">
-        We are a Star Citizen organization focused on exploration, trading, and building a strong community of space enthusiasts.
-    </p>
-</div>
+<!-- About Section -->
+<section class="about-section fix section-padding section-bg">
+    <div class="container">
+        <div class="about-wrapper-2">
+            <div class="section-title-area">
+                <div class="section-title">
+                    <h6 class="wow fadeInUp">About Us</h6>
+                    <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                        Building the Future <span>Among the Stars</span>
+                    </h2>
+                </div>
+                <div class="title-text wow fadeInUp" data-wow-delay=".5s">
+                    <p class="mb-4">
+                        Far Out Corporation is more than just an organization—we're a <br>
+                        community of explorers, traders, and visionaries working together.
+                    </p>
+                    <a href="/about/" class="theme-btn">More About Us</a>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-lg-6">
+                    <div class="content-box wow fadeInUp" data-wow-delay=".3s">
+                        <h3><i class="fas fa-bullseye text-primary me-2"></i> Our Mission</h3>
+                        <p>
+                            To create opportunities for our members to thrive in the Star Citizen universe
+                            through exploration, profitable trade, and strong community bonds. We believe
+                            in cooperation, fair play, and mutual success.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="content-box wow fadeInUp" data-wow-delay=".5s">
+                        <h3><i class="fas fa-eye text-primary me-2"></i> Our Vision</h3>
+                        <p>
+                            To become a leading organization in the Star Citizen universe, known for our
+                            professionalism, reliability, and commitment to excellence. We're building
+                            something that will last far into the future.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent News Section -->
+{% if recent_posts %}
+<section class="news-section fix section-padding">
+    <div class="container">
+        <div class="section-title text-center">
+            <h6 class="wow fadeInUp">Latest Updates</h6>
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">Recent <span>News</span></h2>
+        </div>
+        <div class="row g-4 mt-4">
+            {% for post in recent_posts %}
+            <div class="col-lg-4 col-md-6">
+                <div class="news-card-items wow fadeInUp" data-wow-delay=".{{ forloop.counter }}s">
+                    <div class="news-content">
+                        <ul class="post-date">
+                            <li>
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ post.created_at|date:"M d, Y" }}
+                            </li>
+                            <li>
+                                <i class="fa-regular fa-user"></i>
+                                {{ post.author.username }}
+                            </li>
+                        </ul>
+                        <h3>
+                            <a href="#">{{ post.heading }}</a>
+                        </h3>
+                        {% if post.content %}
+                        <p>{{ post.content|truncatewords:20|striptags }}</p>
+                        {% endif %}
+                        <a href="#" class="link-btn">
+                            Read More <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="/blog/" class="theme-btn wow fadeInUp">
+                View All News <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="lets-talk-section section-bg fix section-padding pb-0">
+    <div class="container">
+        <div class="lets-talk-wrapper">
+            <h2 class="wow fadeInUp" data-wow-delay=".3s">
+                Ready to join our fleet? <br> Let's fly together!
+            </h2>
+            {% if user.is_authenticated %}
+            <a href="/dashboard/" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
+                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+            </a>
+            {% else %}
+            <a href="/accounts/discord/login/" class="theme-btn wow fadeInUp" data-wow-delay=".5s">
+                <i class="fab fa-discord"></i> Join with Discord
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize counter animations
+$(document).ready(function() {
+    $('.count').each(function() {
+        $(this).prop('Counter', 0).animate({
+            Counter: $(this).text()
+        }, {
+            duration: 2000,
+            easing: 'swing',
+            step: function (now) {
+                $(this).text(Math.ceil(now));
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

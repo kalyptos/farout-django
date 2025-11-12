@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Far Out Corporation{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb Section -->
+<div class="breadcrumb-wrapper section-padding bg-cover" style="background-image: url('{% static 'img/breadcrumb.jpg' %}');">
+    <div class="container">
+        <div class="page-heading">
+            <h1 class="wow fadeInUp" data-wow-delay=".3s">About Us</h1>
+            <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <i class="fa-sharp fa-solid fa-slash-forward"></i>
+                </li>
+                <li>
+                    About
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- About Section -->
+<section class="about-section section-padding fix">
+    <div class="container">
+        <!-- Organization Header -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="about-header text-center wow fadeInUp" data-wow-delay=".3s">
+                    {% if organization and organization.logo_url %}
+                    <img src="{{ organization.logo_url }}" alt="{{ organization.name }}" class="org-logo mb-4" style="max-width: 200px;">
+                    {% endif %}
+                    <h2 class="mb-3">
+                        {% if organization %}
+                            {{ organization.name }}
+                        {% else %}
+                            Far Out Corporation
+                        {% endif %}
+                    </h2>
+                    {% if organization and organization.headline %}
+                    <p class="headline-text">{{ organization.headline }}</p>
+                    {% else %}
+                    <p class="headline-text">A premier Star Citizen organization dedicated to exploration, trading, and excellence in the 'verse.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card wow fadeInUp" data-wow-delay=".3s">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{ total_members }}+</h3>
+                        <p>Active Members</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card wow fadeInUp" data-wow-delay=".5s">
+                    <div class="stat-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{{ total_ships }}+</h3>
+                        <p>Ships Available</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="stat-card wow fadeInUp" data-wow-delay=".7s">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>{% if organization %}{{ organization.primary_language|default:"Global" }}{% else %}Global{% endif %}</h3>
+                        <p>Community Reach</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Organization Details -->
+        <div class="row g-4">
+            <!-- Description -->
+            <div class="col-lg-6">
+                <div class="content-card wow fadeInLeft" data-wow-delay=".3s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-info-circle"></i> About Our Organization
+                    </h3>
+                    {% if organization and organization.description %}
+                    <p class="content-text">{{ organization.description|linebreaks }}</p>
+                    {% else %}
+                    <p class="content-text">
+                        Far Out Corporation is a dynamic and ambitious Star Citizen organization focused on building a thriving community of pilots, traders, and explorers. We pride ourselves on our diverse membership and commitment to excellence in every endeavor.
+                    </p>
+                    <p class="content-text">
+                        Whether you're interested in trading, exploration, mining, or combat operations, Far Out Corporation offers opportunities for pilots of all backgrounds and skill levels. Our fleet management system ensures that every member has access to the ships and resources they need to succeed.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- History -->
+            <div class="col-lg-6">
+                <div class="content-card wow fadeInRight" data-wow-delay=".3s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-history"></i> Our History
+                    </h3>
+                    {% if organization and organization.history %}
+                    <p class="content-text">{{ organization.history|linebreaks }}</p>
+                    {% else %}
+                    <p class="content-text">
+                        Founded by a group of veteran space pilots, Far Out Corporation began as a small trading company with big dreams. Through dedication, strategic partnerships, and a commitment to our members, we've grown into one of the premier organizations in the 'verse.
+                    </p>
+                    <p class="content-text">
+                        Today, we continue to expand our operations and welcome new members who share our vision of exploring the stars and building a prosperous future among the stars.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Manifesto -->
+            {% if organization and organization.manifesto %}
+            <div class="col-12">
+                <div class="content-card wow fadeInUp" data-wow-delay=".5s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-flag"></i> Our Manifesto
+                    </h3>
+                    <p class="content-text">{{ organization.manifesto|linebreaks }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Charter -->
+            {% if organization and organization.charter %}
+            <div class="col-12">
+                <div class="content-card wow fadeInUp" data-wow-delay=".7s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-scroll"></i> Organization Charter
+                    </h3>
+                    <p class="content-text">{{ organization.charter|linebreaks }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- What We Do -->
+            <div class="col-12">
+                <div class="content-card wow fadeInUp" data-wow-delay=".9s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-tasks"></i> What We Do
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="service-box">
+                                <div class="service-icon">
+                                    <i class="fas fa-ship"></i>
+                                </div>
+                                <h5>Trading</h5>
+                                <p>Secure trade routes and profitable ventures across the 'verse</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="service-box">
+                                <div class="service-icon">
+                                    <i class="fas fa-compass"></i>
+                                </div>
+                                <h5>Exploration</h5>
+                                <p>Charting unknown systems and discovering new opportunities</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="service-box">
+                                <div class="service-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h5>Security</h5>
+                                <p>Protection and escort services for our members and allies</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="service-box">
+                                <div class="service-icon">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <h5>Mining</h5>
+                                <p>Resource extraction and processing operations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organization Details -->
+            {% if organization %}
+            <div class="col-12">
+                <div class="content-card wow fadeInUp" data-wow-delay="1.1s">
+                    <h3 class="mb-4">
+                        <i class="fas fa-cog"></i> Organization Details
+                    </h3>
+                    <div class="row g-3">
+                        {% if organization.archetype %}
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Archetype:</span>
+                                <span class="detail-value">{{ organization.archetype }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if organization.commitment %}
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Commitment:</span>
+                                <span class="detail-value">{{ organization.commitment }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Recruiting:</span>
+                                <span class="detail-value">
+                                    {% if organization.recruiting %}
+                                        <span class="badge bg-success">Open</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Closed</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- CTA Section -->
+            <div class="col-12">
+                <div class="cta-card text-center wow fadeInUp" data-wow-delay="1.3s">
+                    <h3 class="mb-4">Ready to Join Our Ranks?</h3>
+                    <p class="mb-4">Be part of something bigger. Explore the 'verse with Far Out Corporation.</p>
+                    <div class="btn-group-center">
+                        <a href="{% url 'contact' %}" class="theme-btn me-3">
+                            <i class="fas fa-envelope"></i> Contact Us
+                        </a>
+                        <a href="{% url 'organization:member_list' %}" class="theme-btn btn-outline">
+                            <i class="fas fa-users"></i> View Members
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

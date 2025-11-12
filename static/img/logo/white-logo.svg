@@ -1,0 +1,10 @@
+<svg width="280" height="48" viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Star Icon -->
+  <path d="M24 2L28 18L42 18L30 27L35 42L24 33L13 42L18 27L6 18L20 18L24 2Z" fill="#55E6A5"/>
+
+  <!-- FAR OUT Text -->
+  <text x="55" y="35" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#F5F5F4">FAR OUT</text>
+
+  <!-- Accent Line -->
+  <rect x="55" y="40" width="220" height="2" fill="#BFF747"/>
+</svg>

@@ -61,12 +61,34 @@ python manage.py runserver
 
 ### Configuration
 
+#### Getting Your API Key
+
+You can obtain a free API key in two ways:
+
+1. **Via Website** (Recommended):
+   - Visit [https://api.starcitizen-api.com](https://api.starcitizen-api.com)
+   - Log in with Discord or Google
+   - Your API key will be displayed in your account
+
+2. **Via Discord**:
+   - Join the [Star Citizen API Discord](https://discord.gg/starcitizen-api)
+   - Navigate to the `#keys` channel
+   - Type the command: `/api register`
+   - The bot will send you a private message with your API key
+
+#### Configure Your Environment
+
 Add your Star Citizen API key to your `.env` file:
 ```bash
 STARCITIZEN_API_KEY=your_api_key_here
 ```
 
-**Note**: The API client will work without an API key but may have rate limitations.
+**Example:**
+```bash
+STARCITIZEN_API_KEY=0d32404d021613ba948ba0aeef324ef5
+```
+
+**Note**: The API client will work without an API key but may have rate limitations. For production use, an API key is highly recommended.
 
 ### Syncing Data
 

@@ -1,0 +1,25 @@
+{
+  "name": "farout-django",
+  "version": "1.0.0",
+  "description": "Far Out Corporation - Star Citizen Organization Portal",
+  "private": true,
+  "scripts": {
+    "fmt": "prettier --write \"**/*.{html,css,js,json,md}\" --ignore-path .gitignore",
+    "fmt:check": "prettier --check \"**/*.{html,css,js,json,md}\" --ignore-path .gitignore",
+    "lint:css": "stylelint \"static/css/**/*.css\" --fix",
+    "lint:css:check": "stylelint \"static/css/**/*.css\"",
+    "lint:templates": "djlint templates/ --reformat",
+    "lint:templates:check": "djlint templates/ --check",
+    "lint": "npm run lint:css && npm run lint:templates",
+    "test": "npm run fmt:check && npm run lint:css:check && npm run lint:templates:check"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

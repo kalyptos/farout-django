@@ -27,39 +27,45 @@ class Command(BaseCommand):
         self.stdout.write('🚀 Syncing ships from Star Citizen API...')
 
         try:
-            # First sync manufacturers
-            self.stdout.write('📦 Fetching manufacturers...')
-            manufacturers_data = api_client.get_manufacturers()
+            # Fetch ships (manufacturers are embedded in ship data)
+            self.stdout.write('🚢 Fetching ships from API...')
+            ships_data = api_client.get_ships()
+            self.stdout.write(f'📦 Fetched {len(ships_data)} ships from API')
 
+            # Extract and create manufacturers from ship data
+            self.stdout.write('📦 Extracting manufacturers from ship data...')
+            manufacturers_seen = {}
             mfr_created = 0
             mfr_updated = 0
 
-            for mfr_data in manufacturers_data:
-                code = mfr_data.get('code', '').strip()
-                if not code:
+            for ship_data in ships_data:
+                # Skip null entries
+                if not ship_data:
                     continue
 
-                manufacturer, created = Manufacturer.objects.update_or_create(
-                    code=code,
-                    defaults={
-                        'name': mfr_data.get('name', code),
-                        'description': mfr_data.get('description', ''),
-                        'api_id': mfr_data.get('id', ''),
-                        'api_data': mfr_data,
-                    }
-                )
+                mfr_data = ship_data.get('manufacturer', {})
+                code = mfr_data.get('code', '').strip()
 
-                if created:
-                    mfr_created += 1
-                else:
-                    mfr_updated += 1
+                if code and code not in manufacturers_seen:
+                    manufacturers_seen[code] = mfr_data
+                    manufacturer, created = Manufacturer.objects.update_or_create(
+                        code=code,
+                        defaults={
+                            'name': mfr_data.get('name', code),
+                            'description': mfr_data.get('description', ''),
+                            'api_id': str(mfr_data.get('id', '')),
+                            'api_data': mfr_data,
+                        }
+                    )
+                    if created:
+                        mfr_created += 1
+                    else:
+                        mfr_updated += 1
 
             self.stdout.write(f'  ✅ Manufacturers: {mfr_created} created, {mfr_updated} updated')
 
             # Now sync ships
-            self.stdout.write('🚢 Fetching ships...')
-            ships_data = api_client.get_ships()
-            self.stdout.write(f'📦 Fetched {len(ships_data)} ships from API')
+            self.stdout.write('🚢 Processing ships...')
 
             created_count = 0
             updated_count = 0
@@ -68,6 +74,11 @@ class Command(BaseCommand):
 
             for ship_data in ships_data:
                 try:
+                    # Skip null entries
+                    if not ship_data:
+                        skipped_count += 1
+                        continue
+
                     with transaction.atomic():
                         # Get or create manufacturer
                         mfr_code = ship_data.get('manufacturer', {}).get('code', '').strip()

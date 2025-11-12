@@ -15,7 +15,7 @@ class Manufacturer(models.Model):
         help_text=_('Manufacturer code (e.g., AEGS)')
     )
     name = models.CharField(_('Name'), max_length=100)
-    description = models.TextField(_('Description'), blank=True)
+    description = models.TextField(_('Description'), blank=True, null=True)
     logo_url = models.URLField(_('Logo URL'), blank=True)
 
     # API metadata
@@ -67,7 +67,7 @@ class Ship(models.Model):
     focus = models.CharField(_('Focus'), max_length=200, blank=True)
 
     # Description
-    description = models.TextField(_('Description'), blank=True)
+    description = models.TextField(_('Description'), blank=True, null=True)
     career = models.CharField(_('Career'), max_length=100, blank=True)
     role = models.CharField(_('Role'), max_length=100, blank=True)
 

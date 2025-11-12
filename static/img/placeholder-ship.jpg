@@ -1,0 +1,29 @@
+<!-- SVG placeholder for ships without images -->
+<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shipGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d2d44;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#shipGrad)" />
+
+  <!-- Simple spaceship silhouette -->
+  <g transform="translate(400, 225)">
+    <!-- Main body -->
+    <ellipse cx="0" cy="0" rx="100" ry="40" fill="#3a3a5a" opacity="0.6"/>
+    <!-- Wings -->
+    <path d="M -60 -20 L -120 -60 L -100 -30 Z" fill="#4a4a6a" opacity="0.5"/>
+    <path d="M -60 20 L -120 60 L -100 30 Z" fill="#4a4a6a" opacity="0.5"/>
+    <path d="M 60 -20 L 120 -60 L 100 -30 Z" fill="#4a4a6a" opacity="0.5"/>
+    <path d="M 60 20 L 120 60 L 100 30 Z" fill="#4a4a6a" opacity="0.5"/>
+    <!-- Cockpit -->
+    <circle cx="0" cy="0" r="15" fill="#5a5a7a" opacity="0.7"/>
+    <circle cx="0" cy="0" r="8" fill="#55E6A5" opacity="0.8"/>
+  </g>
+
+  <!-- Text -->
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="24" fill="#888" text-anchor="middle" opacity="0.6">
+    Image Not Available
+  </text>
+</svg>
