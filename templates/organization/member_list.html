@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cache %}
 
 {% block title %}Members - Far Out Corporation{% endblock %}
 
@@ -60,6 +61,7 @@
         </div>
 
         <!-- Members Grid -->
+        {% cache 600 member_list request.GET.q request.GET.rank page_obj.number %}
         <div class="row g-4">
             {% for member in members %}
             <div class="col-xl-3 col-lg-4 col-md-6">
@@ -117,6 +119,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endcache %}
 
         <!-- Pagination -->
         {% include '_partials/_pagination.html' %}

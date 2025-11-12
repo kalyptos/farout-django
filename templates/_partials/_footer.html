@@ -1,6 +1,8 @@
 {% load static %}
+{% load cache %}
 
 <!-- Footer Section -->
+{% cache 900 footer user.is_authenticated %}
 <footer class="footer-section section-bg fix" role="contentinfo" aria-label="Site footer">
     <div class="container">
         <div class="footer-widgets-wrapper">
@@ -107,3 +109,4 @@
         </div>
     </div>
 </footer>
+{% endcache %}

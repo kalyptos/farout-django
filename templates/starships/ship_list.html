@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cache %}
 
 {% block title %}Ship Catalog - Far Out Corporation{% endblock %}
 
@@ -70,6 +71,7 @@
         </div>
 
         <!-- Ship Grid -->
+        {% cache 600 ship_list request.GET.q request.GET.manufacturer request.GET.type page_obj.number %}
         <div class="row g-4">
             {% for ship in ships %}
             <div class="col-xl-4 col-lg-6 col-md-6">
@@ -114,6 +116,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endcache %}
 
         <!-- Pagination -->
         {% include '_partials/_pagination.html' %}

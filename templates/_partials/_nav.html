@@ -1,7 +1,9 @@
 {% load static %}
 {% load nav %}
+{% load cache %}
 
 <!-- Header Section -->
+{% cache 900 navigation user.is_authenticated user.username %}
 <header id="header-sticky" class="header-1">
     <div class="container">
         <div class="mega-menu-wrapper">
@@ -89,3 +91,4 @@
         </div>
     </div>
 </header>
+{% endcache %}
