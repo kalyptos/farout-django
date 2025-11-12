@@ -23,10 +23,10 @@ class StarCitizenAPIClient:
     The API key is included in the URL path: /{api_key}/v1/{mode}/{endpoint}
     Example: /0d32404d021613ba948ba0aeef324ef5/v1/cache/ships
 
-    Get your API key at: https://starcitizen-api.com or via Discord (/api register)
+    Get your API key at: https://api.starcitizen-api.com or via Discord (/api register)
     """
 
-    BASE_URL = "https://starcitizen-api.com"
+    BASE_URL = "https://api.starcitizen-api.com"
     CACHE_TIMEOUT = 3600  # 1 hour
 
     def __init__(self, api_key: Optional[str] = None):
@@ -133,10 +133,10 @@ class StarCitizenAPIClient:
         """
         Fetch organization details.
 
-        Note: This endpoint uses 'live' mode to fetch fresh data from RSI.
+        Note: This endpoint uses 'live' mode with 'user' endpoint to fetch fresh data from RSI.
 
         Args:
-            sid: Organization SID (e.g., 'FAROUT')
+            sid: Organization SID (e.g., 'FAROUTCORP')
 
         Returns:
             Organization dictionary or None if not found
@@ -149,8 +149,8 @@ class StarCitizenAPIClient:
             return cached_data
 
         try:
-            # Organization endpoint uses 'live' mode
-            data = self._make_request(f'v1/live/organization/{sid}')
+            # Organization data is fetched via the user endpoint in live mode
+            data = self._make_request(f'v1/live/user/{sid}')
             org = data.get('data')
             if org:
                 cache.set(cache_key, org, self.CACHE_TIMEOUT)
