@@ -136,6 +136,7 @@
        ============================================================ */
 
     --shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.06);
+    --shadow-soft: 0px 2px 15px 0px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0px 10px 50px 0px rgba(0, 0, 0, 0.15);
 
 
@@ -196,4 +197,17 @@
 
     /* Focus ring (accessibility) */
     --focus-ring: 0 0 0 0.2rem rgba(85, 230, 165, 0.25);
+
+    /* Container query breakpoints (for @container queries) */
+    --container-sm: 576px;
+    --container-md: 768px;
+    --container-lg: 992px;
+    --container-xl: 1200px;
+
+    /* Gap utilities (for flex/grid layouts) */
+    --gap-xs: 0.5rem;   /* 8px */
+    --gap-sm: 1rem;     /* 16px */
+    --gap-md: 1.5rem;   /* 24px */
+    --gap-lg: 2rem;     /* 32px */
+    --gap-xl: 3rem;     /* 48px */
 }
