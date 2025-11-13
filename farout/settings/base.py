@@ -156,12 +156,10 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # Use HTTPS for OAuth callbacks
 
 # Discord OAuth settings
+# Note: APP config is in the database (socialaccount_socialapp table), not here
+# to avoid MultipleObjectsReturned error
 SOCIALACCOUNT_PROVIDERS = {
     'discord': {
-        'APP': {
-            'client_id': config('DISCORD_CLIENT_ID', default=''),
-            'secret': config('DISCORD_CLIENT_SECRET', default=''),
-        },
         'SCOPE': ['identify', 'email'],
         'AUTH_PARAMS': {'auth_type': 'rerequest'},
     }
