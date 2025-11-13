@@ -55,7 +55,15 @@ class CommunicationsRouter:
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         """
         Ensure communications app only migrates on communications DB.
+        Prevent other apps from migrating to communications DB.
         """
         if app_label in self.route_app_labels:
+            # Communications app should only migrate to communications DB
             return db == 'communications'
+
+        # Prevent all other apps from migrating to communications DB
+        if db == 'communications':
+            return False
+
+        # Let default router handle other cases
         return None
