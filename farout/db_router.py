@@ -56,18 +56,23 @@ class CommunicationsRouter:
         """
         Ensure communications app only migrates on communications DB.
         Prevent other apps from migrating to communications DB.
-        Allow Django's core tables (contenttypes) in communications DB.
+        Allow Django's internal management tables.
         """
         if app_label in self.route_app_labels:
             # Communications app should only migrate to communications DB
             return db == 'communications'
 
-        # Allow Django's contenttypes app in communications DB (needed for migrations)
-        if db == 'communications' and app_label == 'contenttypes':
-            return True
-
-        # Prevent all other apps from migrating to communications DB
         if db == 'communications':
+            # Allow Django's internal management tables (django_migrations, etc)
+            # These are created automatically and don't have an app_label
+            if app_label is None:
+                return None
+
+            # Allow Django's core apps needed for database management
+            if app_label in ('contenttypes', 'admin', 'auth', 'sessions'):
+                return None
+
+            # Block all other apps from communications DB
             return False
 
         # Let default router handle other cases
