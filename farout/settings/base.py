@@ -149,6 +149,11 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 
+# Force Discord-only authentication (disable regular signup/login)
+SOCIALACCOUNT_ONLY = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # Use HTTPS for OAuth callbacks
+
 # Discord OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
     'discord': {
