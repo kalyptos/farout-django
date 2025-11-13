@@ -92,8 +92,8 @@ DATABASES = {
         conn_max_age=600
     ),
     # Separate database for communications (messages, contact forms)
-    'communications': dj_database_url.config(
-        default=config('COMMUNICATIONS_DB_URL', default='postgresql://farout:changeme@localhost:5432/farout_communications'),
+    'communications': dj_database_url.parse(
+        config('COMMUNICATIONS_DB_URL', default='postgresql://farout:changeme@localhost:5432/farout_communications'),
         conn_max_age=600
     )
 }
