@@ -150,7 +150,8 @@ LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Force Discord-only authentication (disable regular signup/login)
-SOCIALACCOUNT_ONLY = True
+# Note: Set to False to allow login page to display, but template only shows Discord button
+SOCIALACCOUNT_ONLY = False
 SOCIALACCOUNT_AUTO_SIGNUP = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # Use HTTPS for OAuth callbacks
 
